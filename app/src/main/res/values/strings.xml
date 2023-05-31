@@ -14,6 +14,7 @@
     <string name="action_filter">FILTER</string>
     <string name="person_header">GENERAL INFORMATION</string>
     <string name="contacts_header">CONTACTS</string>
+    <string name="documents_header">DOCUMENTS</string>
     <string name="action_save_changes">SAVE</string>
     <string name="action_delete_contact">DELETE CONTACT</string>
     <string name="login_action">LOGIN</string>
@@ -62,6 +63,7 @@
     <string name="choose_sort_order">CHOOSE SORTING ORDER</string>
     <string name="empty_list_message">NO DATA</string>
     <string name="empty_contact_list_message">NO CONTACTS</string>
+    <string name="empty_documents_list_message">NO DOCUMENTS</string>
     <string name="general_header">GENERAL</string>
     <string name="server_url">SERVER URL</string>
     <string name="should_use_http">SHOULD USE HTTP?</string>

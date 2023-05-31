@@ -19,6 +19,16 @@ class OrganizationDto() : Serializable {
     var lastUpdated: String? = null
 }
 
+class DocumentDto() : Serializable {
+    var id: String? = null
+    var personId: String? = null
+    var name: String? = null
+    var url: String? = null
+    var checksum: String? = null
+    var size: String? = null
+    var createDate: String? = null
+}
+
 class PersonDto() : Serializable {
 
     var id: String? = null

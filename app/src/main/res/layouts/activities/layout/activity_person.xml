@@ -23,19 +23,19 @@
                 android:id="@+id/list_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:divider="@null"
                 android:animateLayoutChanges="true"
-                android:layoutAnimation="@anim/list_layout"
-                android:dividerHeight="0dp" />
+                android:divider="@null"
+                android:dividerHeight="0dp"
+                android:layoutAnimation="@anim/list_layout" />
 
             <ProgressBar
-                style="?android:attr/progressBarStyleHorizontal"
                 android:id="@+id/progress_bar"
-                android:indeterminate="true"
+                style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_gravity="top|center"
+                android:indeterminate="true"
                 android:visibility="invisible" />
 
             <TextView
@@ -230,14 +230,17 @@
                         android:singleLine="true" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/search_button"
+                    style="@style/Widget.MaterialComponents.Button.Icon"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:layout_below="@id/search_salary_layout"
                     android:layout_marginStart="3dp"
                     android:layout_marginEnd="3dp"
-                    android:text="@string/action_search" />
+                    android:text="@string/action_search"
+                    app:icon="@drawable/search_24"
+                    app:iconGravity="textStart" />
 
                 <androidx.fragment.app.FragmentContainerView
                     android:id="@+id/organizations_activity_service_info_fragment"

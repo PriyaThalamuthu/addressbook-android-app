@@ -19,8 +19,10 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.deepschneider.addressbook.R
 import com.deepschneider.addressbook.adapters.ContactsListAdapter
+import com.deepschneider.addressbook.adapters.DocumentsListAdapter
 import com.deepschneider.addressbook.databinding.ActivityCreateOrEditPersonBinding
 import com.deepschneider.addressbook.dto.ContactDto
+import com.deepschneider.addressbook.dto.DocumentDto
 import com.deepschneider.addressbook.dto.PageDataDto
 import com.deepschneider.addressbook.dto.PersonDto
 import com.deepschneider.addressbook.dto.TableDataDto
@@ -42,6 +44,7 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
     private val fieldValidation = BooleanArray(4)
     private lateinit var startForResult: ActivityResultLauncher<Intent>
     private lateinit var currentContactList: MutableList<ContactDto>
+    private lateinit var currentDocumentList: MutableList<DocumentDto>
 
     inner class TextFieldValidation(private val view: View) : TextWatcher {
         override fun afterTextChanged(s: Editable?) {}
@@ -82,6 +85,9 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
         binding.contactsListView.setHasFixedSize(true)
         binding.contactsListView.layoutManager = LinearLayoutManager(this)
         binding.contactsListView.itemAnimator = DefaultItemAnimator()
+        binding.documentsListView.setHasFixedSize(true)
+        binding.documentsListView.layoutManager = LinearLayoutManager(this)
+        binding.documentsListView.itemAnimator = DefaultItemAnimator()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -108,6 +114,7 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
         validateResumeEditText()
         updateSaveButtonState()
         updateContactList()
+        updateDocumentList()
         prepareFloatingActionButton()
         prepareLauncher()
     }
@@ -169,6 +176,21 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
                     this.resources.getStringArray(R.array.contact_types),
                     this@CreateOrEditPersonActivity,
                     startForResult
+                ), false
+            )
+        }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun updateDocumentAdapter() {
+        val adapter = binding.documentsListView.adapter
+        if (adapter != null) {
+            (adapter as DocumentsListAdapter).documents = currentDocumentList
+            adapter.notifyDataSetChanged()
+        } else {
+            binding.documentsListView.swapAdapter(
+                DocumentsListAdapter(
+                    currentDocumentList
                 ), false
             )
         }
@@ -245,6 +267,48 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
         } ?: run {
             currentContactList = arrayListOf()
             binding.emptyContactsList.visibility = View.VISIBLE
+        }
+    }
+
+    private fun updateDocumentList() {
+        personDto?.let {
+            val executor: ExecutorService = Executors.newSingleThreadExecutor()
+            val handler = Handler(Looper.getMainLooper())
+            executor.execute {
+                requestQueue.add(
+                    EntityGetRequest<TableDataDto<DocumentDto>>(
+                        "$serverUrl" + Urls.GET_DOCUMENTS + "?personId=${personDto?.id}&origin=${serverUrl}",
+                        { response ->
+                            if (response.data?.data?.isEmpty() == true) {
+                                handler.post {
+                                    binding.emptyDocumentsList.visibility = View.VISIBLE
+                                    currentDocumentList = arrayListOf()
+                                }
+                            } else {
+                                response.data?.data?.let {
+                                    handler.post {
+                                        currentDocumentList = it.toMutableList()
+                                        updateDocumentAdapter()
+                                        binding.documentsListView.visibility = View.VISIBLE
+                                        binding.emptyDocumentsList.visibility = View.GONE
+                                    }
+                                }
+                            }
+                        },
+                        { error ->
+                            handler.post {
+                                makeErrorSnackBar(error)
+                                binding.emptyDocumentsList.visibility = View.VISIBLE
+                                binding.documentsListView.visibility = View.GONE
+                            }
+                        },
+                        this@CreateOrEditPersonActivity,
+                        object : TypeToken<PageDataDto<TableDataDto<DocumentDto>>>() {}.type
+                    ).also { it.tag = getRequestTag() })
+            }
+        } ?: run {
+            currentDocumentList = arrayListOf()
+            binding.emptyDocumentsList.visibility = View.VISIBLE
         }
     }
 

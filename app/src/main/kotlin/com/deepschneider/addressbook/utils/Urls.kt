@@ -6,6 +6,7 @@ object Urls {
     const val GET_LIST = "/rest/getList"
     const val LOCK_RECORD = "/rest/lockRecord"
     const val GET_CONTACTS = "/rest/getContactList"
+    const val GET_DOCUMENTS = "/rest/getDocumentList"
     const val GET_ORGANIZATION = "/rest/getOrganizationById"
     const val SAVE_OR_CREATE_ORGANIZATION = "/rest/saveOrCreateOrganization"
     const val SAVE_OR_CREATE_PERSON = "/rest/saveOrCreatePerson"

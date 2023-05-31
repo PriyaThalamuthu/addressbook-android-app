@@ -13,6 +13,7 @@
     <string name="action_filter">ФИЛЬТР</string>
     <string name="person_header">ОБЩАЯ ИНФОРМАЦИЯ</string>
     <string name="contacts_header">КОНТАКТЫ</string>
+    <string name="documents_header">ДОКУМЕНТЫ</string>
     <string name="action_save_changes">СОХРАНИТЬ</string>
     <string name="action_delete_contact">УДАЛИТЬ КОНТАКТ</string>
     <string name="login_action">ЛОГИН</string>
@@ -46,6 +47,7 @@
     <string name="choose_sort_order">ВЫБЕРИТЕ ПОРЯДОК СОРТИРОВКИ</string>
     <string name="empty_list_message">НЕТ ДАННЫХ</string>
     <string name="empty_contact_list_message">НЕТ КОНТАКТОВ</string>
+    <string name="empty_documents_list_message">НЕТ ДОКУМЕНТОВ</string>
     <string name="general_header">ОБЩЕЕ</string>
     <string name="server_url">АДРЕС СЕРВЕРА</string>
     <string name="should_use_http">ИСПОЛЬЗОВАНИЕ HTTP</string>
