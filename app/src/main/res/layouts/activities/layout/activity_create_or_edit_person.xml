@@ -170,45 +170,19 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="10dp"
                 android:hint="@string/search_person_resume"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                app:endIconMode="clear_text"
                 app:errorEnabled="true">
 
-                <org.wordpress.aztec.AztecText
-                    style="@style/AztecText"
-                    android:id="@+id/rte_resume_editor"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/resume"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif"
-                    android:imeOptions="flagNoExtractUi"
-                    android:inputType="textCapSentences|textMultiLine"
-                    android:minHeight="50dp"
-                    android:scrollbars="none"
-                    android:translationY="10dp"
-                    aztec:historyEnable="false"
-                    aztec:textColor="?attr/rteTextColor"
-                    aztec:textColorHint="?attr/rteHintTextColor" />
+                    android:ellipsize="end"
+                    android:maxLines="10" />
             </com.google.android.material.textfield.TextInputLayout>
-
-            <RelativeLayout
-                android:id="@+id/rte_toolbar_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="10dp"
-                android:orientation="vertical">
-
-                <org.wordpress.aztec.toolbar.AztecToolbar
-                    android:id="@+id/formatting_toolbar"
-                    style="@style/AztecToolbarStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    aztec:mediaToolbarAvailable="false" />
-            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"

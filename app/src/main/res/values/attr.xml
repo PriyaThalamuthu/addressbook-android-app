@@ -2,11 +2,6 @@
 
 <resources>
     <declare-styleable name="RTEToolbarColors">
-        <attr name="iconNormalColor" format="reference|color" />
-        <attr name="iconHighlightColor" format="reference|color" />
-        <attr name="iconDisabledColor" format="reference|color" />
-        <attr name="rteTextColor" format="reference|color" />
-        <attr name="rteHintTextColor" format="reference|color" />
         <attr name="main_list_item_secondary_color" format="reference|color" />
         <attr name="fab_color" format="reference|color" />
     </declare-styleable>

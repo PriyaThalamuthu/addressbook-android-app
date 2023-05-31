@@ -10,15 +10,8 @@
         <item name="android:statusBarColor">?attr/colorPrimary</item>
         <item name="snackbarStyle">@style/SnackBarStyleLight</item>
         <item name="windowActionBar">true</item>
-        <item name="toolbarBackgroundColor">@color/white</item>
-        <item name="toolbarBorderColor">@color/white</item>
-        <item name="iconNormalColor">?attr/colorPrimary</item>
-        <item name="iconHighlightColor">?attr/colorSecondary</item>
         <item name="colorAccent">?attr/colorPrimary</item>
-        <item name="iconDisabledColor">@color/grey</item>
-        <item name="rteTextColor">@color/rte_resume_text_color</item>
         <item name="fab_color">?attr/colorSecondary</item>
-        <item name="rteHintTextColor">@color/rte_resume_hint_text_color</item>
         <item name="main_list_item_secondary_color">@color/list_item_secondary_color</item>
     </style>
 
@@ -41,33 +34,12 @@
 
     <style name="Theme.Addressbook.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="AztecToolbarStyle">
-        <item name="advanced">false</item>
-        <item name="toolbarIconNormalColor">?attr/iconNormalColor</item>
-        <item name="toolbarIconHighlightColor">?attr/iconHighlightColor</item>
-        <item name="toolbarIconDisabledColor">?attr/iconDisabledColor</item>
-    </style>
-
-    <style name="AztecText">
-        <item name="bulletColor">?attr/colorPrimary</item>
-        <item name="linkColor">?attr/colorPrimary</item>
-        <item name="quoteBackground">?attr/colorPrimaryVariant</item>
-        <item name="quoteColor">?attr/colorPrimary</item>
-    </style>
-
     <style name="Theme.Addressbook.Dark" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <item name="colorPrimary">@color/light_blue_500</item>
         <item name="colorPrimaryVariant">@color/light_blue_700</item>
         <item name="android:statusBarColor">?attr/colorPrimary</item>
         <item name="snackbarStyle">@style/SnackBarStyleDark</item>
         <item name="windowActionBar">true</item>
-        <item name="toolbarBackgroundColor">@color/dark_theme_main_grey</item>
-        <item name="toolbarBorderColor">@color/dark_theme_main_grey</item>
-        <item name="iconNormalColor">?attr/colorPrimary</item>
-        <item name="iconHighlightColor">?attr/colorPrimaryVariant</item>
-        <item name="iconDisabledColor">@color/grey</item>
-        <item name="rteTextColor">@color/white</item>
-        <item name="rteHintTextColor">@color/light_grey</item>
         <item name="main_list_item_secondary_color">?attr/colorPrimary</item>
         <item name="colorAccent">@color/light_blue_500</item>
         <item name="fab_color">?attr/colorPrimary</item>
@@ -102,7 +74,6 @@
 
     <style name="SnackBarStyleDark" parent="Widget.MaterialComponents.Snackbar">
         <item name="android:background">?attr/colorPrimary</item>
-        <item name="textColor">@color/black</item>
     </style>
 
     <style name="PreferenceScreenThemeDark" parent="Theme.Addressbook.Dark">

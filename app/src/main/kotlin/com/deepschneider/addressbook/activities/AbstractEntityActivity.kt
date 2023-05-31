@@ -3,9 +3,12 @@ package com.deepschneider.addressbook.activities
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.Gravity
 import android.view.View
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.preference.PreferenceManager
 import com.android.volley.AuthFailureError
 import com.android.volley.RequestQueue
@@ -60,15 +63,7 @@ abstract class AbstractEntityActivity : AppCompatActivity() {
             requestQueue.add(
                 EntityGetRequest<AlertDto>(
                     url,
-                    { response ->
-                        response.data?.let {
-                            if (showLockNotifications) {
-                                handler.post {
-                                    it.headline?.let { headline -> makeSnackBar(headline) }
-                                }
-                            }
-                        }
-                    },
+                    {},
                     { error ->
                         handler.post {
                             makeErrorSnackBar(error)
@@ -81,11 +76,13 @@ abstract class AbstractEntityActivity : AppCompatActivity() {
     }
 
     protected fun makeSnackBar(message: String) {
-        Snackbar.make(
-            getParentCoordinatorLayoutForSnackBar(),
-            message,
-            Snackbar.LENGTH_LONG
-        ).show()
+        val snackBar = Snackbar.make(getParentCoordinatorLayoutForSnackBar(), message, Snackbar.LENGTH_LONG)
+        val view: View = snackBar.view
+        view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).maxLines = 10
+        val params = view.layoutParams as CoordinatorLayout.LayoutParams
+        params.gravity = Gravity.TOP
+        view.layoutParams = params
+        snackBar.show()
     }
 
     protected fun makeErrorSnackBar(error: VolleyError) {
