@@ -4,7 +4,11 @@ import android.app.DownloadManager
 import android.content.Context
 import android.net.Uri
 import android.os.Environment
+import android.view.ContextMenu
+import android.view.ContextMenu.ContextMenuInfo
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.View
 import android.view.ViewGroup
 import android.webkit.MimeTypeMap
 import androidx.recyclerview.widget.RecyclerView
@@ -20,12 +24,13 @@ class DocumentsListAdapter(
     RecyclerView.Adapter<DocumentsListAdapter.DocumentViewHolder>() {
 
     inner class DocumentViewHolder(binding: DocumentListItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+        RecyclerView.ViewHolder(binding.root), View.OnCreateContextMenuListener {
         var currentItem: DocumentDto? = null
         var documentName = binding.name
         var documentDateAndSize = binding.dateAndSize
 
         init {
+            binding.root.setOnCreateContextMenuListener(this)
             binding.downloadButton.setOnClickListener {
                 currentItem?.url?.let { url ->
                     val dm = activity.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager?
@@ -42,6 +47,10 @@ class DocumentsListAdapter(
                     dm?.enqueue(request)
                 }
             }
+        }
+
+        override fun onCreateContextMenu(menu: ContextMenu, v: View?, menuInfo: ContextMenuInfo?) {
+            menu.add(Menu.NONE, 101, Menu.NONE, "DELETE")
         }
     }
 

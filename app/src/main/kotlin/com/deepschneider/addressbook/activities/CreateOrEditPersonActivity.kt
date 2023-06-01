@@ -570,6 +570,23 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
         return main.toString()
     }
 
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            101 -> {
+                MaterialAlertDialogBuilder(this@CreateOrEditPersonActivity)
+                    .setTitle("DELETE THIS DOCUMENT?")
+                    .setPositiveButton(R.string.contact_deletion_delete) { _, _ ->
+
+                    }
+                    .setNegativeButton(R.string.contact_deletion_cancel, null).show()
+                true
+            }
+
+            else -> super.onContextItemSelected(item)
+        }
+    }
+
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
