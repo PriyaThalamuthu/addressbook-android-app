@@ -187,8 +187,8 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
         validateSalaryEditText()
         validateResumeEditText()
         updateSaveButtonState()
-        updateContactList()
         updateDocumentList()
+        updateContactList()
         prepareFloatingActionButton()
         prepareLauncher()
     }
