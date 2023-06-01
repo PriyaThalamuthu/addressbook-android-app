@@ -572,7 +572,8 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
                 MaterialAlertDialogBuilder(this@CreateOrEditPersonActivity)
                     .setTitle("DELETE THIS DOCUMENT?")
                     .setPositiveButton(R.string.contact_deletion_delete) { _, _ ->
-                        (binding.documentsListView.adapter as DocumentsListAdapter).currentAdapterItem?.id?.let { documentId ->
+                        val documentToDelete = (binding.documentsListView.adapter as DocumentsListAdapter).currentAdapterItem
+                        documentToDelete?.id?.let { documentId ->
                             val handler = Handler(Looper.getMainLooper())
                             val executor: ExecutorService = Executors.newSingleThreadExecutor()
                             val url = "$serverUrl" + Urls.DELETE_DOCUMENT + "?id=${documentId}"
@@ -580,7 +581,10 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
                                 requestQueue.add(
                                     SimpleGetRequest(
                                         url,
-                                        {_ -> updateDocumentList()},
+                                        {_ ->
+                                            makeSnackBar(documentToDelete.name + " DELETED")
+                                            updateDocumentList()
+                                        },
                                         { error ->
                                             handler.post {
                                                 makeErrorSnackBar(error)
