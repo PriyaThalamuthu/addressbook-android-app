@@ -94,7 +94,7 @@ abstract class AbstractEntityActivity : AppCompatActivity() {
             newIntent.setDataAndType(uri, mimeType)
             newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             newIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            startActivity(newIntent);
+            startActivity(newIntent)
         }
         val view: View = snackBar.view
         view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).maxLines = 10

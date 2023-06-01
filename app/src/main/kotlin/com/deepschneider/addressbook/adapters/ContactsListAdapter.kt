@@ -28,6 +28,7 @@ class ContactsListAdapter(
         init {
             binding.root.setOnClickListener {
                 activity.clearFocus()
+                activity.closeFABMenu()
                 val intent = Intent(activity, CreateOrEditContactActivity::class.java)
                 intent.putExtra("contact", currentItem)
                 startForResult.launch(intent)

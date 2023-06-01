@@ -125,7 +125,7 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
     private lateinit var startForResult: ActivityResultLauncher<Intent>
     private lateinit var currentContactList: MutableList<ContactDto>
     private lateinit var currentDocumentList: MutableList<DocumentDto>
-
+    private var isFABOpen = false
     inner class TextFieldValidation(private val view: View) : TextWatcher {
         override fun afterTextChanged(s: Editable?) {}
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -140,9 +140,31 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
         }
     }
 
+    private fun showFABMenu() {
+        isFABOpen = true
+        binding.fabMain.animate().rotation(-150F)
+        binding.fabContact.animate().translationY(-resources.getDimension(R.dimen.standard_75))
+        binding.fabFile.animate().translationY(-resources.getDimension(R.dimen.standard_125))
+    }
+
+    fun closeFABMenu() {
+        isFABOpen = false
+        binding.fabMain.animate().rotation(0F)
+        binding.fabContact.animate().translationY(0F)
+        binding.fabFile.animate().translationY(0F)
+    }
+
     private fun prepareFloatingActionButton() {
-        binding.fab.setOnClickListener {
+        binding.fabMain.setOnClickListener {
+            if (!isFABOpen) {
+                showFABMenu()
+            } else {
+                closeFABMenu()
+            }
+        }
+        binding.fabContact.setOnClickListener {
             clearFocus()
+            closeFABMenu()
             startForResult.launch(
                 Intent(
                     applicationContext,
