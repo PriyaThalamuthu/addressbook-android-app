@@ -61,8 +61,7 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
                             val columnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)
                             val columnTitle = cursor.getColumnIndex(DownloadManager.COLUMN_TITLE)
                             if (cursor.moveToFirst() && cursor.getInt(columnIndex) == DownloadManager.STATUS_SUCCESSFUL) {
-                                val columnUri =
-                                    cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)
+                                val columnUri = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)
                                 val map = MimeTypeMap.getSingleton()
                                 val mimeType = map.getMimeTypeFromExtension(
                                     MimeTypeMap.getFileExtensionFromUrl(cursor.getString(columnTitle))
@@ -87,8 +86,7 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
             }
 
             if (DownloadManager.ACTION_NOTIFICATION_CLICKED == intent.action) {
-                val referenceId =
-                    intent.getLongArrayExtra(DownloadManager.EXTRA_NOTIFICATION_CLICK_DOWNLOAD_IDS)
+                val referenceId = intent.getLongArrayExtra(DownloadManager.EXTRA_NOTIFICATION_CLICK_DOWNLOAD_IDS)
                 if (referenceId != null) {
                     if (referenceId.isNotEmpty()) {
                         val dmQuery = DownloadManager.Query()
@@ -96,10 +94,8 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
                         try {
                             downloadManager.query(dmQuery).use { cursor ->
                                 if (cursor != null && cursor.count > 0) {
-                                    val columnIndex =
-                                        cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)
-                                    val columnTitle =
-                                        cursor.getColumnIndex(DownloadManager.COLUMN_TITLE)
+                                    val columnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)
+                                    val columnTitle = cursor.getColumnIndex(DownloadManager.COLUMN_TITLE)
                                     if (cursor.moveToFirst() && cursor.getInt(columnIndex) == DownloadManager.STATUS_RUNNING) {
                                         makeSnackBar(cursor.getString(columnTitle) + "\nDOWNLOADING IN PROGRESS")
                                     } else {
@@ -191,8 +187,8 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
         validateSalaryEditText()
         validateResumeEditText()
         updateSaveButtonState()
-        updateContactList()
         updateDocumentList()
+        updateContactList()
         prepareFloatingActionButton()
         prepareLauncher()
     }
@@ -221,8 +217,7 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
                         if (shouldDelete == true) {
                             currentContactList.removeIf { x -> x.id == resultContactDto.id }
                         } else {
-                            val originalContactDto =
-                                currentContactList.find { x -> x.id == resultContactDto.id }
+                            val originalContactDto = currentContactList.find { x -> x.id == resultContactDto.id }
                             originalContactDto?.data = resultContactDto.data
                             originalContactDto?.type = resultContactDto.type
                             originalContactDto?.description = resultContactDto.description
@@ -428,16 +423,14 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
             targetPersonDto?.firstName = binding.firstName.text.toString()
             targetPersonDto?.lastName = binding.lastName.text.toString()
             targetPersonDto?.resume = binding.resume.text.toString()
-            targetPersonDto?.salary =
-                binding.salary.text.toString() + " " + binding.salaryCurrency.text.toString()
+            targetPersonDto?.salary = binding.salary.text.toString() + " " + binding.salaryCurrency.text.toString()
         } ?: run {
             create = true
             targetPersonDto = PersonDto()
             targetPersonDto?.firstName = binding.firstName.text.toString()
             targetPersonDto?.lastName = binding.lastName.text.toString()
             targetPersonDto?.resume = binding.resume.text.toString()
-            targetPersonDto?.salary =
-                binding.salary.text.toString() + " " + binding.salaryCurrency.text.toString()
+            targetPersonDto?.salary = binding.salary.text.toString() + " " + binding.salaryCurrency.text.toString()
             targetPersonDto?.orgId = orgId
         }
         targetPersonDto?.let {
