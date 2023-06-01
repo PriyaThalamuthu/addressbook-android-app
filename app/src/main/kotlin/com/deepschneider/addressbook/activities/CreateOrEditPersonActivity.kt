@@ -37,6 +37,7 @@ import com.deepschneider.addressbook.dto.PersonDto
 import com.deepschneider.addressbook.dto.TableDataDto
 import com.deepschneider.addressbook.network.EntityGetRequest
 import com.deepschneider.addressbook.network.SaveOrCreateEntityRequest
+import com.deepschneider.addressbook.network.SimpleGetRequest
 import com.deepschneider.addressbook.utils.Constants
 import com.deepschneider.addressbook.utils.Urls
 import com.deepschneider.addressbook.utils.Utils
@@ -66,15 +67,17 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
                                 val mimeType = map.getMimeTypeFromExtension(
                                     MimeTypeMap.getFileExtensionFromUrl(cursor.getString(columnTitle))
                                 )
-                                makeFileSnackBar(
-                                    cursor.getString(columnTitle) + "\nFILE DOWNLOADED",
-                                    FileProvider.getUriForFile(
-                                        this@CreateOrEditPersonActivity,
-                                        BuildConfig.APPLICATION_ID + ".provider",
-                                        File(Uri.parse(cursor.getString(columnUri)).path)
-                                    ),
-                                    mimeType
-                                )
+                                Uri.parse(cursor.getString(columnUri)).path?.let { path ->
+                                    makeFileSnackBar(
+                                        cursor.getString(columnTitle) + "\nFILE DOWNLOADED",
+                                        FileProvider.getUriForFile(
+                                            this@CreateOrEditPersonActivity,
+                                            BuildConfig.APPLICATION_ID + ".provider",
+                                            File(path)
+                                        ),
+                                        mimeType
+                                    )
+                                }
                             } else {
                                 makeSnackBar(cursor.getString(columnTitle) + "\nDOWNLOADING FAILED\nPLEASE TRY AGAIN")
                             }
@@ -569,7 +572,25 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
                 MaterialAlertDialogBuilder(this@CreateOrEditPersonActivity)
                     .setTitle("DELETE THIS DOCUMENT?")
                     .setPositiveButton(R.string.contact_deletion_delete) { _, _ ->
+                        (binding.documentsListView.adapter as DocumentsListAdapter).currentAdapterItem?.id?.let { documentId ->
+                            val handler = Handler(Looper.getMainLooper())
+                            val executor: ExecutorService = Executors.newSingleThreadExecutor()
+                            val url = "$serverUrl" + Urls.DELETE_DOCUMENT + "?id=${documentId}"
+                            executor.execute {
+                                requestQueue.add(
+                                    SimpleGetRequest(
+                                        url,
+                                        {_ -> updateDocumentList()},
+                                        { error ->
+                                            handler.post {
+                                                makeErrorSnackBar(error)
+                                            }
+                                        },
+                                        this@CreateOrEditPersonActivity
+                                    ).also { it.tag = getRequestTag() })
+                            }
 
+                        }
                     }
                     .setNegativeButton(R.string.contact_deletion_cancel, null).show()
                 true
@@ -578,7 +599,6 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
             else -> super.onContextItemSelected(item)
         }
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {

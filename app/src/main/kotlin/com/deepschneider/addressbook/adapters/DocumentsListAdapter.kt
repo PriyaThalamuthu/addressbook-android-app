@@ -23,6 +23,8 @@ class DocumentsListAdapter(
 ) :
     RecyclerView.Adapter<DocumentsListAdapter.DocumentViewHolder>() {
 
+    var currentAdapterItem: DocumentDto? = null
+
     inner class DocumentViewHolder(binding: DocumentListItemBinding) :
         RecyclerView.ViewHolder(binding.root), View.OnCreateContextMenuListener {
         var currentItem: DocumentDto? = null
@@ -31,6 +33,10 @@ class DocumentsListAdapter(
 
         init {
             binding.root.setOnCreateContextMenuListener(this)
+            binding.root.setOnLongClickListener {
+                currentAdapterItem = currentItem
+                false
+            }
             binding.downloadButton.setOnClickListener {
                 currentItem?.url?.let { url ->
                     val dm = activity.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager?
@@ -62,6 +68,11 @@ class DocumentsListAdapter(
                 false
             )
         )
+    }
+
+    override fun onViewRecycled(holder: DocumentViewHolder) {
+        holder.itemView.setOnLongClickListener(null)
+        super.onViewRecycled(holder)
     }
 
     override fun onBindViewHolder(holder: DocumentViewHolder, position: Int) {
