@@ -1,5 +1,7 @@
 package com.deepschneider.addressbook.activities
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -77,6 +79,22 @@ abstract class AbstractEntityActivity : AppCompatActivity() {
 
     protected fun makeSnackBar(message: String) {
         val snackBar = Snackbar.make(getParentCoordinatorLayoutForSnackBar(), message, Snackbar.LENGTH_LONG)
+        val view: View = snackBar.view
+        view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).maxLines = 10
+        val params = view.layoutParams as CoordinatorLayout.LayoutParams
+        params.gravity = Gravity.TOP
+        view.layoutParams = params
+        snackBar.show()
+    }
+
+    protected fun makeFileSnackBar(message: String, uri: Uri, mimeType: String) {
+        val snackBar = Snackbar.make(getParentCoordinatorLayoutForSnackBar(), message, Snackbar.LENGTH_LONG)
+        snackBar.setAction("OPEN") {
+            val newIntent = Intent(Intent.ACTION_VIEW);
+            newIntent.setDataAndType(uri, mimeType);
+            newIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK;
+            startActivity(newIntent);
+        }
         val view: View = snackBar.view
         view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).maxLines = 10
         val params = view.layoutParams as CoordinatorLayout.LayoutParams

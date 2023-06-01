@@ -2,7 +2,12 @@ package com.deepschneider.addressbook.activities
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.DownloadManager
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -12,6 +17,7 @@ import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.webkit.MimeTypeMap
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -33,10 +39,69 @@ import com.deepschneider.addressbook.utils.Urls
 import com.deepschneider.addressbook.utils.Utils
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.reflect.TypeToken
+import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
+
 class CreateOrEditPersonActivity : AbstractEntityActivity() {
+    private var downloadCompleteReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val downloadManager = context.getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+            if (DownloadManager.ACTION_DOWNLOAD_COMPLETE == intent.action) {
+                val referenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1L)
+                val dmQuery = DownloadManager.Query()
+                dmQuery.setFilterById(referenceId)
+                try {
+                    downloadManager.query(dmQuery).use { cursor ->
+                        if (cursor != null && cursor.count > 0) {
+                            val columnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)
+                            val columnTitle = cursor.getColumnIndex(DownloadManager.COLUMN_TITLE)
+                            if (cursor.moveToFirst() && cursor.getInt(columnIndex) == DownloadManager.STATUS_SUCCESSFUL) {
+                                val columnUri = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)
+                                val map = MimeTypeMap.getSingleton()
+                                val ext = MimeTypeMap.getFileExtensionFromUrl(cursor.getString(columnTitle))
+                                val mimeType = map.getMimeTypeFromExtension(ext)
+                                val mFile = File(Uri.parse(cursor.getString(columnUri)).path)
+                                makeFileSnackBar(cursor.getString(columnTitle) + "\nFILE DOWNLOADED",
+                                    Uri.parse(mFile.absolutePath),
+                                    mimeType!!)
+                            } else {
+                                makeSnackBar(cursor.getString(columnTitle) + "\nDOWNLOADING FAILED\nPLEASE TRY AGAIN")
+                            }
+                        }
+                    }
+                } catch (exception: Exception) {
+                    makeSnackBar("DOWNLOADING FAILED, PLEASE TRY AGAIN")
+                }
+            }
+
+            if (DownloadManager.ACTION_NOTIFICATION_CLICKED == intent.action) {
+                val referenceId = intent.getLongArrayExtra(DownloadManager.EXTRA_NOTIFICATION_CLICK_DOWNLOAD_IDS)
+                if (referenceId != null) {
+                    if(referenceId.isNotEmpty()){
+                        val dmQuery = DownloadManager.Query()
+                        dmQuery.setFilterById(*referenceId)
+                        try {
+                            downloadManager.query(dmQuery).use { cursor ->
+                                if (cursor != null && cursor.count > 0) {
+                                    val columnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)
+                                    val columnTitle = cursor.getColumnIndex(DownloadManager.COLUMN_TITLE)
+                                    if (cursor.moveToFirst() && cursor.getInt(columnIndex) == DownloadManager.STATUS_RUNNING) {
+                                        makeSnackBar(cursor.getString(columnTitle) + "\nDOWNLOADING IN PROGRESS")
+                                    } else {
+                                        makeSnackBar(cursor.getString(columnTitle) + "\nDOWNLOADING FAILED\nPLEASE TRY AGAIN")
+                                    }
+                                }
+                            }
+                        } catch (exception: Exception) {
+                            makeSnackBar("DOWNLOADING FAILED, PLEASE TRY AGAIN")
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     private lateinit var binding: ActivityCreateOrEditPersonBinding
     private var personDto: PersonDto? = null
@@ -96,7 +161,7 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        if(!resources.configuration.isNightModeActive)
+        if (!resources.configuration.isNightModeActive)
             setTheme(R.style.Theme_Addressbook_Light)
         super.onCreate(savedInstanceState)
         binding = ActivityCreateOrEditPersonBinding.inflate(layoutInflater)
@@ -143,7 +208,8 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
                         if (shouldDelete == true) {
                             currentContactList.removeIf { x -> x.id == resultContactDto.id }
                         } else {
-                            val originalContactDto = currentContactList.find { x -> x.id == resultContactDto.id }
+                            val originalContactDto =
+                                currentContactList.find { x -> x.id == resultContactDto.id }
                             originalContactDto?.data = resultContactDto.data
                             originalContactDto?.type = resultContactDto.type
                             originalContactDto?.description = resultContactDto.description
@@ -190,7 +256,8 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
         } else {
             binding.documentsListView.swapAdapter(
                 DocumentsListAdapter(
-                    currentDocumentList
+                    currentDocumentList,
+                    this@CreateOrEditPersonActivity
                 ), false
             )
         }
@@ -348,14 +415,16 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
             targetPersonDto?.firstName = binding.firstName.text.toString()
             targetPersonDto?.lastName = binding.lastName.text.toString()
             targetPersonDto?.resume = binding.resume.text.toString()
-            targetPersonDto?.salary = binding.salary.text.toString() + " " + binding.salaryCurrency.text.toString()
+            targetPersonDto?.salary =
+                binding.salary.text.toString() + " " + binding.salaryCurrency.text.toString()
         } ?: run {
             create = true
             targetPersonDto = PersonDto()
             targetPersonDto?.firstName = binding.firstName.text.toString()
             targetPersonDto?.lastName = binding.lastName.text.toString()
             targetPersonDto?.resume = binding.resume.text.toString()
-            targetPersonDto?.salary = binding.salary.text.toString() + " " + binding.salaryCurrency.text.toString()
+            targetPersonDto?.salary =
+                binding.salary.text.toString() + " " + binding.salaryCurrency.text.toString()
             targetPersonDto?.orgId = orgId
         }
         targetPersonDto?.let {
@@ -449,7 +518,14 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
             binding.id.setText(it.id)
             binding.firstName.setText(it.firstName)
             binding.lastName.setText(it.lastName)
-            it.salary?.let { salary -> binding.salary.setText(salary.substring(0, salary.length - 4)) }
+            it.salary?.let { salary ->
+                binding.salary.setText(
+                    salary.substring(
+                        0,
+                        salary.length - 4
+                    )
+                )
+            }
             binding.resume.setText(it.resume)
             binding.saveCreateButton.text = this.getString(R.string.action_save_changes)
             title = " " + it.firstName + " " + it.lastName
@@ -487,6 +563,7 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
                 finish()
                 return true
             }
+
             R.id.action_share_person -> {
                 val sendIntent: Intent = Intent().apply {
                     action = Intent.ACTION_SEND
@@ -499,17 +576,23 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
                 startActivity(Intent.createChooser(sendIntent, null))
                 return true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
 
     override fun onStart() {
         super.onStart()
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
+        intentFilter.addAction(DownloadManager.ACTION_NOTIFICATION_CLICKED);
+        registerReceiver(downloadCompleteReceiver, intentFilter);
         personDto?.id?.let { sendLockRequest(true, Constants.PERSONS_CACHE_NAME, it) }
     }
 
     override fun onStop() {
         super.onStop()
+        unregisterReceiver(downloadCompleteReceiver);
         personDto?.id?.let { sendLockRequest(false, Constants.PERSONS_CACHE_NAME, it) }
     }
 }
