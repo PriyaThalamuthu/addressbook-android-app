@@ -14,7 +14,6 @@ import android.os.Looper
 import android.text.Editable
 import android.text.Html
 import android.text.TextWatcher
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -69,7 +68,8 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
                                 )
                                 Uri.parse(cursor.getString(columnUri)).path?.let { path ->
                                     makeFileSnackBar(
-                                        cursor.getString(columnTitle) + "\nFILE DOWNLOADED",
+                                        cursor.getString(columnTitle)
+                                                + this@CreateOrEditPersonActivity.getString(R.string.downloading_finished_message),
                                         FileProvider.getUriForFile(
                                             this@CreateOrEditPersonActivity,
                                             BuildConfig.APPLICATION_ID + ".provider",
@@ -79,12 +79,13 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
                                     )
                                 }
                             } else {
-                                makeSnackBar(cursor.getString(columnTitle) + "\nDOWNLOADING FAILED\nPLEASE TRY AGAIN")
+                                makeSnackBar(cursor.getString(columnTitle)
+                                        + this@CreateOrEditPersonActivity.getString(R.string.downloading_failed_message))
                             }
                         }
                     }
                 } catch (exception: Exception) {
-                    makeSnackBar("DOWNLOADING FAILED, PLEASE TRY AGAIN")
+                    makeSnackBar(this@CreateOrEditPersonActivity.getString(R.string.downloading_failed_message))
                 }
             }
 
@@ -100,14 +101,16 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
                                     val columnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)
                                     val columnTitle = cursor.getColumnIndex(DownloadManager.COLUMN_TITLE)
                                     if (cursor.moveToFirst() && cursor.getInt(columnIndex) == DownloadManager.STATUS_RUNNING) {
-                                        makeSnackBar(cursor.getString(columnTitle) + "\nDOWNLOADING IN PROGRESS")
+                                        makeSnackBar(cursor.getString(columnTitle)
+                                                + this@CreateOrEditPersonActivity.getString(R.string.downloading_in_progress_message))
                                     } else {
-                                        makeSnackBar(cursor.getString(columnTitle) + "\nDOWNLOADING FAILED\nPLEASE TRY AGAIN")
+                                        makeSnackBar(cursor.getString(columnTitle)
+                                                + this@CreateOrEditPersonActivity.getString(R.string.downloading_failed_message))
                                     }
                                 }
                             }
                         } catch (exception: Exception) {
-                            makeSnackBar("DOWNLOADING FAILED, PLEASE TRY AGAIN")
+                            makeSnackBar(this@CreateOrEditPersonActivity.getString(R.string.downloading_failed_message))
                         }
                     }
                 }
@@ -163,7 +166,11 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
         binding.contactsListView.layoutManager = LinearLayoutManager(this)
         binding.contactsListView.itemAnimator = DefaultItemAnimator()
         binding.documentsListView.setHasFixedSize(true)
-        binding.documentsListView.layoutManager = LinearLayoutManager(this)
+        binding.documentsListView.layoutManager = object:LinearLayoutManager(this){
+            override fun supportsPredictiveItemAnimations(): Boolean {
+                return true
+            }
+        }
         binding.documentsListView.itemAnimator = DefaultItemAnimator()
     }
 
@@ -265,11 +272,13 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
             (adapter as DocumentsListAdapter).documents = currentDocumentList
             adapter.notifyDataSetChanged()
         } else {
+            val newAdapter = DocumentsListAdapter(
+                currentDocumentList,
+                this@CreateOrEditPersonActivity
+            )
+            newAdapter.setHasStableIds(true)
             binding.documentsListView.swapAdapter(
-                DocumentsListAdapter(
-                    currentDocumentList,
-                    this@CreateOrEditPersonActivity
-                ), false
+                newAdapter, true
             )
         }
     }
@@ -359,6 +368,7 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
                         { response ->
                             if (response.data?.data?.isEmpty() == true) {
                                 handler.post {
+                                    binding.documentsListView.visibility = View.GONE
                                     binding.emptyDocumentsList.visibility = View.VISIBLE
                                     currentDocumentList = arrayListOf()
                                 }
@@ -568,11 +578,12 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            101 -> {
+            Constants.MENU_DELETE_DOCUMENT -> {
                 MaterialAlertDialogBuilder(this@CreateOrEditPersonActivity)
-                    .setTitle("DELETE THIS DOCUMENT?")
+                    .setTitle(this.getString(R.string.delete_document_dialog_header))
                     .setPositiveButton(R.string.contact_deletion_delete) { _, _ ->
-                        val documentToDelete = (binding.documentsListView.adapter as DocumentsListAdapter).currentAdapterItem
+                        val documentToDelete =
+                            (binding.documentsListView.adapter as DocumentsListAdapter).currentAdapterItem
                         documentToDelete?.id?.let { documentId ->
                             val handler = Handler(Looper.getMainLooper())
                             val executor: ExecutorService = Executors.newSingleThreadExecutor()
@@ -581,8 +592,12 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
                                 requestQueue.add(
                                     SimpleGetRequest(
                                         url,
-                                        {_ ->
-                                            makeSnackBar(documentToDelete.name + " DELETED")
+                                        {
+                                            makeSnackBar(
+                                                documentToDelete.name
+                                                        + " "
+                                                        + this.getString(R.string.deleted_document_notification)
+                                            )
                                             updateDocumentList()
                                         },
                                         { error ->

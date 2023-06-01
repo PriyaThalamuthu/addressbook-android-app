@@ -114,4 +114,11 @@
     <string name="biometric_authentification_failed_message">Authentication failed</string>
     <string name="biometric_authentification_error_message">Authentication error:</string>
     <string name="server_url_empty_error">SET SERVER URL IN SETTINGS!</string>
+    <string name="downloading_failed_message">\nDOWNLOADING FAILED\nPLEASE TRY AGAIN</string>
+    <string name="downloading_in_progress_message">\nDOWNLOADING IN PROGRESS</string>
+    <string name="downloading_in_progress_notification">Downloading file</string>
+    <string name="downloading_finished_message">\nFILE DOWNLOADED</string>
+    <string name="delete_document_dialog_header">DELETE THIS DOCUMENT?</string>
+    <string name="deleted_document_notification">DELETED</string>
+    <string name="document_open_action">OPEN</string>
 </resources>

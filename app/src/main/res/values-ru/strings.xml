@@ -99,4 +99,11 @@
     <string name="biometric_authentification_error_message">Ошибка аутентификации:</string>
     <string name="action_share_person">ОТПРАВИТЬ ДАННЫЕ</string>
     <string name="server_url_empty_error">УКАЖИТЕ АДРЕС СЕРВЕРА В НАСТРОЙКАХ!</string>
+    <string name="downloading_failed_message">\nСКАЧИВАНИЕ ЗАВЕРШИЛОСЬ С ОШИБКОЙ\nПОВТОРИТЕ ПОПЫТКУ</string>
+    <string name="downloading_in_progress_message">\nИДЕТ СКАЧИВАНИЕ ФАЙЛА</string>
+    <string name="downloading_in_progress_notification">Идет скачивание файла</string>
+    <string name="downloading_finished_message">\nФАЙЛ СКАЧАН</string>
+    <string name="delete_document_dialog_header">УДАЛИТЬ ЭТОТ ДОКУМЕНТ?</string>
+    <string name="deleted_document_notification">УДАЛЕН</string>
+    <string name="document_open_action">ОТКРЫТЬ</string>
 </resources>

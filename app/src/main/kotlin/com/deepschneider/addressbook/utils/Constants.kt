@@ -5,6 +5,7 @@ import java.util.Locale
 import java.util.TreeSet
 
 object Constants {
+    const val MENU_DELETE_DOCUMENT = 101
     const val NO_VALUE = "no value"
     const val TOKEN_KEY = "token"
     const val BIOMETRICS = "biometrics"

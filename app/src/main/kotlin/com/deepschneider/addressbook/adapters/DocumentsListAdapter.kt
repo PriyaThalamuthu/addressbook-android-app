@@ -12,14 +12,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.MimeTypeMap
 import androidx.recyclerview.widget.RecyclerView
+import com.deepschneider.addressbook.R
 import com.deepschneider.addressbook.activities.CreateOrEditPersonActivity
 import com.deepschneider.addressbook.databinding.DocumentListItemBinding
 import com.deepschneider.addressbook.dto.DocumentDto
+import com.deepschneider.addressbook.utils.Constants
 
 
 class DocumentsListAdapter(
-    var documents: List<DocumentDto>,
-    private val activity: CreateOrEditPersonActivity,
+    var documents: MutableList<DocumentDto>,
+    private val activity: CreateOrEditPersonActivity
 ) :
     RecyclerView.Adapter<DocumentsListAdapter.DocumentViewHolder>() {
 
@@ -42,7 +44,7 @@ class DocumentsListAdapter(
                     val dm = activity.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager?
                     val request = DownloadManager.Request(Uri.parse(url))
                     request.setTitle(currentItem?.name ?: "")
-                    request.setDescription("Скачивание файла...")
+                    request.setDescription(activity.getString(R.string.downloading_in_progress_notification))
                     val map = MimeTypeMap.getSingleton()
                     val ext = MimeTypeMap.getFileExtensionFromUrl(currentItem?.name)
                     request.setMimeType(map.getMimeTypeFromExtension(ext))
@@ -56,7 +58,12 @@ class DocumentsListAdapter(
         }
 
         override fun onCreateContextMenu(menu: ContextMenu, v: View?, menuInfo: ContextMenuInfo?) {
-            menu.add(Menu.NONE, 101, Menu.NONE, "DELETE")
+            menu.add(
+                Menu.NONE,
+                Constants.MENU_DELETE_DOCUMENT,
+                Menu.NONE,
+                activity.getString(R.string.contact_deletion_delete)
+            )
         }
     }
 
@@ -70,11 +77,6 @@ class DocumentsListAdapter(
         )
     }
 
-    override fun onViewRecycled(holder: DocumentViewHolder) {
-        holder.itemView.setOnLongClickListener(null)
-        super.onViewRecycled(holder)
-    }
-
     override fun onBindViewHolder(holder: DocumentViewHolder, position: Int) {
         holder.currentItem = documents[position]
         holder.documentName.text = documents[position].name
@@ -84,5 +86,9 @@ class DocumentsListAdapter(
 
     override fun getItemCount(): Int {
         return documents.size
+    }
+
+    override fun getItemId(position: Int): Long {
+        return documents[position].hashCode().toLong()
     }
 }
