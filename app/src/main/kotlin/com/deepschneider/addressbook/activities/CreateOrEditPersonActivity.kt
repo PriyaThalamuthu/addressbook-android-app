@@ -14,6 +14,7 @@ import android.os.Looper
 import android.text.Editable
 import android.text.Html
 import android.text.TextWatcher
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -21,8 +22,10 @@ import android.webkit.MimeTypeMap
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.deepschneider.addressbook.BuildConfig
 import com.deepschneider.addressbook.R
 import com.deepschneider.addressbook.adapters.ContactsListAdapter
 import com.deepschneider.addressbook.adapters.DocumentsListAdapter
@@ -58,14 +61,21 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
                             val columnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)
                             val columnTitle = cursor.getColumnIndex(DownloadManager.COLUMN_TITLE)
                             if (cursor.moveToFirst() && cursor.getInt(columnIndex) == DownloadManager.STATUS_SUCCESSFUL) {
-                                val columnUri = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)
+                                val columnUri =
+                                    cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)
                                 val map = MimeTypeMap.getSingleton()
-                                val ext = MimeTypeMap.getFileExtensionFromUrl(cursor.getString(columnTitle))
-                                val mimeType = map.getMimeTypeFromExtension(ext)
-                                val mFile = File(Uri.parse(cursor.getString(columnUri)).path)
-                                makeFileSnackBar(cursor.getString(columnTitle) + "\nFILE DOWNLOADED",
-                                    Uri.parse(mFile.absolutePath),
-                                    mimeType!!)
+                                val mimeType = map.getMimeTypeFromExtension(
+                                    MimeTypeMap.getFileExtensionFromUrl(cursor.getString(columnTitle))
+                                )
+                                makeFileSnackBar(
+                                    cursor.getString(columnTitle) + "\nFILE DOWNLOADED",
+                                    FileProvider.getUriForFile(
+                                        this@CreateOrEditPersonActivity,
+                                        BuildConfig.APPLICATION_ID + ".provider",
+                                        File(Uri.parse(cursor.getString(columnUri)).path)
+                                    ),
+                                    mimeType
+                                )
                             } else {
                                 makeSnackBar(cursor.getString(columnTitle) + "\nDOWNLOADING FAILED\nPLEASE TRY AGAIN")
                             }
@@ -77,16 +87,19 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
             }
 
             if (DownloadManager.ACTION_NOTIFICATION_CLICKED == intent.action) {
-                val referenceId = intent.getLongArrayExtra(DownloadManager.EXTRA_NOTIFICATION_CLICK_DOWNLOAD_IDS)
+                val referenceId =
+                    intent.getLongArrayExtra(DownloadManager.EXTRA_NOTIFICATION_CLICK_DOWNLOAD_IDS)
                 if (referenceId != null) {
-                    if(referenceId.isNotEmpty()){
+                    if (referenceId.isNotEmpty()) {
                         val dmQuery = DownloadManager.Query()
                         dmQuery.setFilterById(*referenceId)
                         try {
                             downloadManager.query(dmQuery).use { cursor ->
                                 if (cursor != null && cursor.count > 0) {
-                                    val columnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)
-                                    val columnTitle = cursor.getColumnIndex(DownloadManager.COLUMN_TITLE)
+                                    val columnIndex =
+                                        cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)
+                                    val columnTitle =
+                                        cursor.getColumnIndex(DownloadManager.COLUMN_TITLE)
                                     if (cursor.moveToFirst() && cursor.getInt(columnIndex) == DownloadManager.STATUS_RUNNING) {
                                         makeSnackBar(cursor.getString(columnTitle) + "\nDOWNLOADING IN PROGRESS")
                                     } else {
@@ -584,15 +597,15 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
     override fun onStart() {
         super.onStart()
         val intentFilter = IntentFilter()
-        intentFilter.addAction(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
-        intentFilter.addAction(DownloadManager.ACTION_NOTIFICATION_CLICKED);
-        registerReceiver(downloadCompleteReceiver, intentFilter);
+        intentFilter.addAction(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
+        intentFilter.addAction(DownloadManager.ACTION_NOTIFICATION_CLICKED)
+        registerReceiver(downloadCompleteReceiver, intentFilter)
         personDto?.id?.let { sendLockRequest(true, Constants.PERSONS_CACHE_NAME, it) }
     }
 
     override fun onStop() {
         super.onStop()
-        unregisterReceiver(downloadCompleteReceiver);
+        unregisterReceiver(downloadCompleteReceiver)
         personDto?.id?.let { sendLockRequest(false, Constants.PERSONS_CACHE_NAME, it) }
     }
 }
