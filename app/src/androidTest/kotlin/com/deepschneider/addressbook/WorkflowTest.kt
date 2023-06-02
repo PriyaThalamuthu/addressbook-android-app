@@ -8,7 +8,6 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
 import com.deepschneider.addressbook.activities.CreateOrEditPersonActivity
@@ -21,8 +20,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.wordpress.aztec.AztecText
-
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
@@ -95,13 +92,10 @@ class WorkflowTest {
         onView(withId(R.id.fab)).perform(click())
         val createPersonActivity = monitor.lastActivity
         TestCase.assertNotNull(createPersonActivity)
-        runOnUiThread {
-            createPersonActivity.findViewById<AztecText>(R.id.rte_resume_editor)
-                .fromHtml("<ol><li>Art</li><li>Design</li></ol>")
-        }
         onView(withId(R.id.first_name)).perform(clearText(), typeText("Steve"))
         onView(withId(R.id.last_name)).perform(clearText(), typeText("Jobs"))
         onView(withId(R.id.salary)).perform(clearText(), typeText("1000000"))
+        onView(withId(R.id.resume)).perform(clearText(), typeText("1. First point\n2.Second point"))
         onView(withId(R.id.salary_currency)).perform(click())
         onView(withText(R.string.choose_salary_currency)).check(matches(isDisplayed()))
         onView(withText("AUD")).perform(click())

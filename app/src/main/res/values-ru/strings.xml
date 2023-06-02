@@ -107,4 +107,8 @@
     <string name="delete_document_dialog_header">УДАЛИТЬ ЭТОТ ДОКУМЕНТ?</string>
     <string name="deleted_document_notification">УДАЛЕН</string>
     <string name="document_open_action">ОТКРЫТЬ</string>
+    <string name="uploading_file_dialog_title">ЗАГРУЗКА ФАЙЛА</string>
+    <string name="file_uploaded">\nФАЙЛ ЗАГРУЖЕН</string>
+    <string name="file_uploading_failed">ЗАГРУЗКА ФАЙЛА ЗАВЕРШИЛАСЬ С ОШИБКОЙ</string>
+    <string name="file_cannot_be_uploaded">ФАЙЛ НЕ МОЖЕТ БЫТЬ ЗАГРУЖЕН</string>
 </resources>

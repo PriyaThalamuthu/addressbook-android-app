@@ -2,13 +2,14 @@ package com.deepschneider.addressbook.utils
 
 import android.app.Activity
 import android.content.Context
+import android.database.Cursor
+import android.net.Uri
 import android.os.Build
+import android.provider.OpenableColumns
 import android.util.Base64
 import androidx.preference.PreferenceManager
 import com.deepschneider.addressbook.dto.FilterDto
 import java.io.Serializable
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 object Utils {
     fun getTextFilterDto(name: String, value: String?): FilterDto? {
@@ -49,5 +50,46 @@ object Utils {
     fun getBiometrics(context: Context): String? {
         return PreferenceManager.getDefaultSharedPreferences(context)
             .getString(Constants.BIOMETRICS, null)
+    }
+
+    fun getFileName(context: Context, uri: Uri?): String? {
+        if (uri == null) return null
+        var result: String? = null
+        if (uri.scheme == "content") {
+            val cursor: Cursor? = context.contentResolver.query(uri, null, null, null, null)
+            cursor.use { cur ->
+                if (cur != null && cur.moveToFirst()) {
+                    val idx = cursor?.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                    if(idx != null && idx > 0) {
+                        result = cur.getString(idx)
+                    }
+                }
+            }
+        }
+        if (result == null) {
+            result = uri.path
+            val cut = result?.lastIndexOf('/')
+            if (cut != null && cut != -1) {
+                result = result?.substring(cut + 1)
+            }
+        }
+        return result
+    }
+
+    fun getFileSize(context: Context, uri: Uri?): Long? {
+        if (uri == null) return null
+        var result: Long? = null
+        if (uri.scheme == "content") {
+            val cursor: Cursor? = context.contentResolver.query(uri, null, null, null, null)
+            cursor.use { cur ->
+                if (cur != null && cur.moveToFirst()) {
+                    val idx = cursor?.getColumnIndex(OpenableColumns.SIZE)
+                    if(idx != null && idx > 0) {
+                        result = cur.getLong(idx)
+                    }
+                }
+            }
+        }
+        return result
     }
 }

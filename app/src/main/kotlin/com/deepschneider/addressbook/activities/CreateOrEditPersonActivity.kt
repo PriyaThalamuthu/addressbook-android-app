@@ -2,6 +2,7 @@ package com.deepschneider.addressbook.activities
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Dialog
 import android.app.DownloadManager
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -17,12 +18,16 @@ import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.Window
 import android.webkit.MimeTypeMap
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.deepschneider.addressbook.BuildConfig
@@ -36,6 +41,8 @@ import com.deepschneider.addressbook.dto.PageDataDto
 import com.deepschneider.addressbook.dto.PersonDto
 import com.deepschneider.addressbook.dto.TableDataDto
 import com.deepschneider.addressbook.network.EntityGetRequest
+import com.deepschneider.addressbook.network.ProgressCallback
+import com.deepschneider.addressbook.network.ProgressRequestBody
 import com.deepschneider.addressbook.network.SaveOrCreateEntityRequest
 import com.deepschneider.addressbook.network.SimpleGetRequest
 import com.deepschneider.addressbook.utils.Constants
@@ -43,10 +50,32 @@ import com.deepschneider.addressbook.utils.Urls
 import com.deepschneider.addressbook.utils.Utils
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.reflect.TypeToken
+import okhttp3.Interceptor
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Multipart
+import retrofit2.http.POST
+import retrofit2.http.Part
+import retrofit2.http.Query
 import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
+internal interface DocumentUploadService {
+    @Multipart
+    @POST("rest/uploadDocument")
+    fun uploadDocument(
+        @Query("personId") personId: String?,
+        @Part file: MultipartBody.Part?
+    ): Call<ResponseBody?>?
+}
 
 class CreateOrEditPersonActivity : AbstractEntityActivity() {
     private var downloadCompleteReceiver: BroadcastReceiver = object : BroadcastReceiver() {
@@ -292,9 +321,83 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
             }
         startFileChooserForResult =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+                closeFABMenu()
                 if (result.resultCode == Activity.RESULT_OK) {
                     val returnUri = result.data?.data
-                    makeSnackBar(returnUri.toString())
+                    val fileName = Utils.getFileName(this, returnUri)
+                    val fileSize = Utils.getFileSize(this, returnUri)
+                    val serverUrl = serverUrl
+                    if (returnUri == null || fileName == null || fileSize == null || serverUrl == null) {
+                        makeSnackBar(this@CreateOrEditPersonActivity.getString(R.string.file_cannot_be_uploaded))
+                        return@registerForActivityResult
+                    }
+                    val fileType = contentResolver.getType(returnUri)
+                    if (fileType == null) {
+                        makeSnackBar(this@CreateOrEditPersonActivity.getString(R.string.file_cannot_be_uploaded))
+                        return@registerForActivityResult
+                    }
+                    val mediaType = MediaType.parse(fileType)
+                    val fileInputStream = contentResolver.openInputStream(returnUri)
+                    if (mediaType == null || fileInputStream == null) {
+                        makeSnackBar(this@CreateOrEditPersonActivity.getString(R.string.file_cannot_be_uploaded))
+                        return@registerForActivityResult
+                    }
+                    val httpClient = OkHttpClient.Builder()
+                    httpClient.addInterceptor { chain: Interceptor.Chain ->
+                        val original = chain.request()
+                        val request = original.newBuilder()
+                            .header(
+                                "Authorization",
+                                "Bearer " + PreferenceManager.getDefaultSharedPreferences(this)
+                                    .getString(Constants.TOKEN_KEY, Constants.NO_VALUE)
+                            )
+                            .method(original.method(), original.body())
+                            .build()
+                        chain.proceed(request)
+                    }
+                    val client = httpClient.build()
+                    val builder = Retrofit.Builder()
+                        .baseUrl(serverUrl)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .client(client)
+                    val progressDialog = Dialog(this)
+                    progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                    progressDialog.setContentView(R.layout.uploading_progress_dialog)
+                    val progressBar = progressDialog.findViewById<ProgressBar>(R.id.uploading_progress_bar)
+                    val title = progressDialog.findViewById<TextView>(R.id.uploading_file_name)
+                    title.text = fileName
+                    val requestFile = ProgressRequestBody(
+                        mediaType,
+                        fileInputStream,
+                        fileSize,
+                        object :
+                            ProgressCallback {
+                            override fun onProgress(progress: Long) {
+                                progressBar.setProgress(progress.toInt(), true)
+                            }
+                        })
+                    val body = MultipartBody.Part.createFormData("file", fileName, requestFile)
+                    val service = builder.build().create(DocumentUploadService::class.java)
+                    if(fileSize > 5_242_880)
+                        progressDialog.show()
+                    progressDialog.setCancelable(false)
+                    val call = service.uploadDocument(personDto?.id, body)
+                    call?.enqueue(object : Callback<ResponseBody?> {
+                        override fun onResponse(
+                            call: Call<ResponseBody?>,
+                            response: Response<ResponseBody?>
+                        ) {
+                            updateDocumentList()
+                            progressDialog.dismiss()
+                            makeSnackBar(fileName + this@CreateOrEditPersonActivity.getString(R.string.file_uploaded))
+                        }
+                        override fun onFailure(call: Call<ResponseBody?>, t: Throwable) {
+                            progressDialog.dismiss()
+                            makeSnackBar(this@CreateOrEditPersonActivity.getString(R.string.file_uploading_failed))
+                        }
+                    })
+                    client.dispatcher().executorService().shutdown()
+                    client.connectionPool().evictAll()
                 }
             }
     }
