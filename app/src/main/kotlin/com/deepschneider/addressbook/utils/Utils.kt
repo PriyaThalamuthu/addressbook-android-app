@@ -44,7 +44,7 @@ object Utils {
         PreferenceManager.getDefaultSharedPreferences(context)
             .edit()
             .putString(Constants.BIOMETRICS, Base64.encodeToString(data, Base64.NO_WRAP))
-            .commit()
+            .apply()
     }
 
     fun getBiometrics(context: Context): String? {

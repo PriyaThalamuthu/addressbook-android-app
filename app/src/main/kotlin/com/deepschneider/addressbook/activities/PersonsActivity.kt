@@ -25,7 +25,6 @@ import com.deepschneider.addressbook.utils.Urls
 import com.deepschneider.addressbook.utils.Utils
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
-import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 class PersonsActivity : AbstractListActivity<PersonDto>() {

@@ -2,7 +2,7 @@ package com.deepschneider.addressbook.dto
 
 import java.io.Serializable
 
-class ContactDto() : Serializable {
+class ContactDto : Serializable {
     var personId: String? = null
     var id: String? = null
     var type: String? = ""
@@ -10,7 +10,7 @@ class ContactDto() : Serializable {
     var description: String? = null
 }
 
-class OrganizationDto() : Serializable {
+class OrganizationDto : Serializable {
     var id: String? = null
     var name: String? = null
     var street: String? = null
@@ -19,7 +19,7 @@ class OrganizationDto() : Serializable {
     var lastUpdated: String? = null
 }
 
-class DocumentDto() : Serializable {
+class DocumentDto : Serializable {
     var id: String? = null
     var personId: String? = null
     var name: String? = null
@@ -51,7 +51,7 @@ class DocumentDto() : Serializable {
     }
 }
 
-class PersonDto() : Serializable {
+class PersonDto : Serializable {
 
     var id: String? = null
     var orgId: String? = null

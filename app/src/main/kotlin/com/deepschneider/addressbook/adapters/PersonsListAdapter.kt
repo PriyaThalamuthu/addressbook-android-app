@@ -1,5 +1,6 @@
 package com.deepschneider.addressbook.adapters
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.text.Html
 import android.view.View
@@ -15,6 +16,7 @@ class PersonsListAdapter(
     private val activity: Activity
 ) : ArrayAdapter<PersonDto>(activity, R.layout.persons_list_item, persons) {
 
+    @SuppressLint("SetTextI18n")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val rowView = convertView ?: activity.layoutInflater.inflate(R.layout.persons_list_item, parent, false)
         rowView.findViewById<TextView>(R.id.person_list_item_first_name_and_last_name).text = "${persons[position].firstName} ${persons[position].lastName}"

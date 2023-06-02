@@ -1,5 +1,6 @@
 package com.deepschneider.addressbook.fragments
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
@@ -55,6 +56,7 @@ class ServiceInfoFragment : Fragment() {
         updateBuildInfo()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updateBuildInfo() {
         requestQueue.add(object :
             JsonObjectRequest(Method.GET, serverUrl + Urls.BUILD_INFO, null, { response ->

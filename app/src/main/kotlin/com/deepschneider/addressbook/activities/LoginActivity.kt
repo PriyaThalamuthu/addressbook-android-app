@@ -313,7 +313,7 @@ class LoginActivity : AppCompatActivity() {
             PreferenceManager.getDefaultSharedPreferences(this@LoginActivity)
                 .edit()
                 .remove(Constants.BIOMETRICS)
-                .commit()
+                .apply()
             showLoginButton()
             makeSnackBar(this@LoginActivity.getString(R.string.biometric_authentification_failed_message))
             return
@@ -337,7 +337,7 @@ class LoginActivity : AppCompatActivity() {
                             PreferenceManager.getDefaultSharedPreferences(this@LoginActivity)
                                 .edit()
                                 .remove(Constants.BIOMETRICS)
-                                .commit()
+                                .apply()
                             startOrganizationActivity()
                         } else {
                             makeSnackBar(errString as String)

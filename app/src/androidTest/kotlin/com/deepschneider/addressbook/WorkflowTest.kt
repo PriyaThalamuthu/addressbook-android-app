@@ -95,7 +95,7 @@ class WorkflowTest {
         onView(withId(R.id.first_name)).perform(clearText(), typeText("Steve"))
         onView(withId(R.id.last_name)).perform(clearText(), typeText("Jobs"))
         onView(withId(R.id.salary)).perform(clearText(), typeText("1000000"))
-        onView(withId(R.id.resume)).perform(clearText(), typeText("1. First point\n2.Second point"))
+        onView(withId(R.id.resume)).perform(clearText(), typeText("1. First point\n2. Second point"))
         onView(withId(R.id.salary_currency)).perform(click())
         onView(withText(R.string.choose_salary_currency)).check(matches(isDisplayed()))
         onView(withText("AUD")).perform(click())

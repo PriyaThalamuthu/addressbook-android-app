@@ -172,7 +172,7 @@ abstract class AbstractListActivity<in T> : AppCompatActivity() {
         requestQueue.add(
             LogoutRequest(
                 NetworkUtils.getServerUrl(this),
-                { _ ->
+                {
                     PreferenceManager.getDefaultSharedPreferences(this)
                         .edit()
                         .remove(Constants.TOKEN_KEY)
