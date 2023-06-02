@@ -101,7 +101,8 @@ class WorkflowTest {
         onView(withText("AUD")).perform(click())
 
         // Create contact
-        onView(withId(R.id.fab)).perform(click())
+        onView(withId(R.id.fab_main)).perform(click())
+        onView(withId(R.id.fab_contact)).perform(click())
 
         onView(withId(R.id.type)).perform(click())
         onView(withText(R.string.choose_contact_type)).check(matches(isDisplayed()))
