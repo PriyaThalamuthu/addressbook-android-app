@@ -11,7 +11,6 @@ import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.preference.PreferenceManager
 import com.android.volley.AuthFailureError
 import com.android.volley.RequestQueue
 import com.android.volley.ServerError
@@ -22,7 +21,6 @@ import com.deepschneider.addressbook.R
 import com.deepschneider.addressbook.dto.AlertDto
 import com.deepschneider.addressbook.dto.PageDataDto
 import com.deepschneider.addressbook.network.EntityGetRequest
-import com.deepschneider.addressbook.utils.Constants
 import com.deepschneider.addressbook.utils.NetworkUtils
 import com.deepschneider.addressbook.utils.Urls
 import com.google.android.material.snackbar.Snackbar
@@ -41,10 +39,9 @@ abstract class AbstractEntityActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         requestQueue = Volley.newRequestQueue(this)
         serverUrl = NetworkUtils.getServerUrl(this@AbstractEntityActivity)
-        setupOnBackPressedListener()
     }
 
-    private fun setupOnBackPressedListener() {
+    protected fun setupOnBackPressedListener() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 currentFocus?.clearFocus() ?: run {

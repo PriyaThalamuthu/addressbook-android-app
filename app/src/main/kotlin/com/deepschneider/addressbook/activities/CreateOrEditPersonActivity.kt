@@ -18,6 +18,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.webkit.MimeTypeMap
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -234,6 +235,17 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
         updateContactList()
         prepareFloatingActionButton()
         prepareLauncher()
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (isFABOpen) {
+                    closeFABMenu()
+                } else {
+                    currentFocus?.clearFocus() ?: run {
+                        finish()
+                    }
+                }
+            }
+        })
     }
 
     private fun prepareCurrencyEditText() {

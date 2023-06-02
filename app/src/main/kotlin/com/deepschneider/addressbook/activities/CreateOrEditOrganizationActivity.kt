@@ -144,6 +144,7 @@ class CreateOrEditOrganizationActivity : AbstractEntityActivity() {
         validateAddressEditText()
         validateNameEditText()
         updateSaveButtonState()
+        setupOnBackPressedListener()
     }
 
     private fun setupListeners() {

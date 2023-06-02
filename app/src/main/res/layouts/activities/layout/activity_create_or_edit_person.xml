@@ -188,6 +188,7 @@
                 android:layout_height="wrap_content">
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/contacts_list_view_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
@@ -210,7 +211,7 @@
                     android:id="@+id/contacts_list_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="57dp"
+                    android:layout_below="@+id/contacts_list_view_header"
                     android:nestedScrollingEnabled="false"
                     android:scrollbars="none" />
 
@@ -218,8 +219,9 @@
                     android:id="@+id/empty_contacts_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/contacts_list_view_header"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginTop="67dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginBottom="10dp"
                     android:visibility="invisible"
@@ -244,6 +246,7 @@
                 android:layout_height="wrap_content">
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/documents_list_view_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
@@ -266,7 +269,7 @@
                     android:id="@+id/documents_list_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="57dp"
+                    android:layout_below="@+id/documents_list_view_header"
                     android:nestedScrollingEnabled="false"
                     android:scrollbars="none" />
 
@@ -274,8 +277,9 @@
                     android:id="@+id/empty_documents_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/documents_list_view_header"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginTop="67dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginBottom="10dp"
                     android:visibility="invisible"
