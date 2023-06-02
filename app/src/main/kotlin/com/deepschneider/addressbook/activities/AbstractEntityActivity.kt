@@ -77,7 +77,7 @@ abstract class AbstractEntityActivity : AppCompatActivity() {
         }
     }
 
-    protected fun makeSnackBar(message: String) {
+    fun makeSnackBar(message: String) {
         val snackBar = Snackbar.make(getParentCoordinatorLayoutForSnackBar(), message, Snackbar.LENGTH_LONG)
         val view: View = snackBar.view
         view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).maxLines = 10

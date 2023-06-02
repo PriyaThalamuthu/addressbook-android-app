@@ -123,6 +123,7 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
     private lateinit var orgId: String
     private val fieldValidation = BooleanArray(4)
     private lateinit var startForResult: ActivityResultLauncher<Intent>
+    private lateinit var startFileChooserForResult: ActivityResultLauncher<Intent>
     private lateinit var currentContactList: MutableList<ContactDto>
     private lateinit var currentDocumentList: MutableList<DocumentDto>
     private var isFABOpen = false
@@ -144,14 +145,18 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
         isFABOpen = true
         binding.fabMain.animate().rotation(-150F)
         binding.fabContact.animate().translationY(-resources.getDimension(R.dimen.standard_75))
-        binding.fabFile.animate().translationY(-resources.getDimension(R.dimen.standard_125))
+        personDto?.let {
+            binding.fabFile.animate().translationY(-resources.getDimension(R.dimen.standard_125))
+        }
     }
 
     fun closeFABMenu() {
         isFABOpen = false
         binding.fabMain.animate().rotation(0F)
         binding.fabContact.animate().translationY(0F)
-        binding.fabFile.animate().translationY(0F)
+        personDto?.let {
+            binding.fabFile.animate().translationY(0F)
+        }
     }
 
     private fun prepareFloatingActionButton() {
@@ -171,6 +176,12 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
                     CreateOrEditContactActivity::class.java
                 )
             )
+        }
+        binding.fabFile.setOnClickListener {
+            var chooseFile = Intent(Intent.ACTION_GET_CONTENT)
+            chooseFile.type = "*/*"
+            chooseFile = Intent.createChooser(chooseFile, "Choose a file")
+            startFileChooserForResult.launch(chooseFile)
         }
     }
 
@@ -265,6 +276,13 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
                         binding.contactsListView.visibility = View.VISIBLE
                     }
                     updateContactAdapter()
+                }
+            }
+        startFileChooserForResult =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    val returnUri = result.data?.data
+                    makeSnackBar(returnUri.toString())
                 }
             }
     }
@@ -598,47 +616,38 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
         return main.toString()
     }
 
-    override fun onContextItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            Constants.MENU_DELETE_DOCUMENT -> {
-                MaterialAlertDialogBuilder(this@CreateOrEditPersonActivity)
-                    .setTitle(this.getString(R.string.delete_document_dialog_header))
-                    .setPositiveButton(R.string.contact_deletion_delete) { _, _ ->
-                        val documentToDelete =
-                            (binding.documentsListView.adapter as DocumentsListAdapter).currentAdapterItem
-                        documentToDelete?.id?.let { documentId ->
-                            val handler = Handler(Looper.getMainLooper())
-                            val executor: ExecutorService = Executors.newSingleThreadExecutor()
-                            val url = "$serverUrl" + Urls.DELETE_DOCUMENT + "?id=${documentId}"
-                            executor.execute {
-                                requestQueue.add(
-                                    SimpleGetRequest(
-                                        url,
-                                        {
-                                            makeSnackBar(
-                                                documentToDelete.name
-                                                        + " "
-                                                        + this.getString(R.string.deleted_document_notification)
-                                            )
-                                            updateDocumentList()
-                                        },
-                                        { error ->
-                                            handler.post {
-                                                makeErrorSnackBar(error)
-                                            }
-                                        },
-                                        this@CreateOrEditPersonActivity
-                                    ).also { it.tag = getRequestTag() })
-                            }
-
-                        }
+    fun deleteDocument(documentDto: DocumentDto?) {
+        MaterialAlertDialogBuilder(this@CreateOrEditPersonActivity)
+            .setTitle(this.getString(R.string.delete_document_dialog_header))
+            .setPositiveButton(R.string.contact_deletion_delete) { _, _ ->
+                documentDto?.id?.let { documentId ->
+                    val handler = Handler(Looper.getMainLooper())
+                    val executor: ExecutorService = Executors.newSingleThreadExecutor()
+                    val url = "$serverUrl" + Urls.DELETE_DOCUMENT + "?id=${documentId}"
+                    executor.execute {
+                        requestQueue.add(
+                            SimpleGetRequest(
+                                url,
+                                {
+                                    makeSnackBar(
+                                        documentDto.name
+                                                + " "
+                                                + this.getString(R.string.deleted_document_notification)
+                                    )
+                                    updateDocumentList()
+                                },
+                                { error ->
+                                    handler.post {
+                                        makeErrorSnackBar(error)
+                                    }
+                                },
+                                this@CreateOrEditPersonActivity
+                            ).also { it.tag = getRequestTag() })
                     }
-                    .setNegativeButton(R.string.contact_deletion_cancel, null).show()
-                true
-            }
 
-            else -> super.onContextItemSelected(item)
-        }
+                }
+            }
+            .setNegativeButton(R.string.contact_deletion_cancel, null).show()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

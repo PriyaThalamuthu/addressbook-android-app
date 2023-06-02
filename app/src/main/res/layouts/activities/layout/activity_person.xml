@@ -266,6 +266,7 @@
         android:backgroundTint="?attr/fab_color"
         android:contentDescription="@string/add_new_person"
         app:backgroundTint="?attr/fab_color"
+        app:layout_behavior=".utils.FloatingActionButtonBehavior"
         app:srcCompat="@android:drawable/ic_input_add" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

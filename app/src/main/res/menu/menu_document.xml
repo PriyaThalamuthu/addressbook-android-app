@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activities.CreateOrEditPersonActivity">
+    <item
+        android:id="@+id/menu_delete_document"
+        android:icon="@drawable/delete_forever_menu_24"
+        android:title="@string/contact_deletion_delete" />
+</menu>

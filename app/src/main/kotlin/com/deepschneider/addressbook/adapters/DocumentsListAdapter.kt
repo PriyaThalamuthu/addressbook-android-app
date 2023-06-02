@@ -4,19 +4,17 @@ import android.app.DownloadManager
 import android.content.Context
 import android.net.Uri
 import android.os.Environment
-import android.view.ContextMenu
-import android.view.ContextMenu.ContextMenuInfo
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.View
+import android.view.MenuInflater
 import android.view.ViewGroup
 import android.webkit.MimeTypeMap
+import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.deepschneider.addressbook.R
 import com.deepschneider.addressbook.activities.CreateOrEditPersonActivity
 import com.deepschneider.addressbook.databinding.DocumentListItemBinding
 import com.deepschneider.addressbook.dto.DocumentDto
-import com.deepschneider.addressbook.utils.Constants
 
 
 class DocumentsListAdapter(
@@ -25,19 +23,29 @@ class DocumentsListAdapter(
 ) :
     RecyclerView.Adapter<DocumentsListAdapter.DocumentViewHolder>() {
 
-    var currentAdapterItem: DocumentDto? = null
-
     inner class DocumentViewHolder(binding: DocumentListItemBinding) :
-        RecyclerView.ViewHolder(binding.root), View.OnCreateContextMenuListener {
+        RecyclerView.ViewHolder(binding.root) {
         var currentItem: DocumentDto? = null
         var documentName = binding.name
         var documentDateAndSize = binding.dateAndSize
 
         init {
-            binding.root.setOnCreateContextMenuListener(this)
-            binding.root.setOnLongClickListener {
-                currentAdapterItem = currentItem
-                false
+            binding.mainLayout.setOnClickListener {
+                val wrapper = ContextThemeWrapper(activity, R.style.popupMenuStyle)
+                val popupMenu = PopupMenu(wrapper, binding.root)
+                popupMenu.setForceShowIcon(true)
+                val inflater: MenuInflater = popupMenu.menuInflater
+                inflater.inflate(R.menu.menu_document, popupMenu.menu)
+                popupMenu.show()
+                popupMenu.setOnMenuItemClickListener { item ->
+                    when (item.itemId) {
+                        R.id.menu_delete_document -> {
+                            activity.deleteDocument(currentItem)
+                        }
+                    }
+                    false
+                }
+
             }
             binding.downloadButton.setOnClickListener {
                 currentItem?.url?.let { url ->
@@ -53,17 +61,9 @@ class DocumentsListAdapter(
                         Environment.DIRECTORY_DOWNLOADS, currentItem?.name ?: ""
                     )
                     dm?.enqueue(request)
+                    activity.makeSnackBar(currentItem?.name + activity.getString(R.string.downloading_in_progress_message))
                 }
             }
-        }
-
-        override fun onCreateContextMenu(menu: ContextMenu, v: View?, menuInfo: ContextMenuInfo?) {
-            menu.add(
-                Menu.NONE,
-                Constants.MENU_DELETE_DOCUMENT,
-                Menu.NONE,
-                activity.getString(R.string.contact_deletion_delete)
-            )
         }
     }
 
@@ -80,8 +80,7 @@ class DocumentsListAdapter(
     override fun onBindViewHolder(holder: DocumentViewHolder, position: Int) {
         holder.currentItem = documents[position]
         holder.documentName.text = documents[position].name
-        holder.documentDateAndSize.text =
-            documents[position].createDate + " | " + documents[position].size
+        holder.documentDateAndSize.text = documents[position].createDate + " | " + documents[position].size
     }
 
     override fun getItemCount(): Int {

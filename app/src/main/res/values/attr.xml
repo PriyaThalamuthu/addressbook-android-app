@@ -3,6 +3,7 @@
 <resources>
     <declare-styleable name="RTEToolbarColors">
         <attr name="main_list_item_secondary_color" format="reference|color" />
+        <attr name="context_menu_background_color" format="reference|color" />
         <attr name="fab_color" format="reference|color" />
     </declare-styleable>
 </resources>

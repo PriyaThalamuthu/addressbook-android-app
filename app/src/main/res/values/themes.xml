@@ -13,6 +13,8 @@
         <item name="colorAccent">?attr/colorPrimary</item>
         <item name="fab_color">?attr/colorSecondary</item>
         <item name="main_list_item_secondary_color">@color/list_item_secondary_color</item>
+        <item name="android:popupMenuStyle">@style/popupMenuStyle</item>
+        <item name="context_menu_background_color">@android:color/background_light</item>
     </style>
 
     <style name="Theme.Addressbook.Light.NoActionBar">
@@ -24,6 +26,12 @@
 
     <style name="SnackBarStyleLight" parent="Widget.MaterialComponents.Snackbar">
         <item name="android:background">@color/purple_500</item>
+    </style>
+
+    <style name="popupMenuStyle">
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:iconTint">?attr/colorPrimary</item>
+        <item name="android:itemBackground">?attr/context_menu_background_color</item>
     </style>
 
     <style name="Widget.MaterialComponents.Button.IconOnly">
@@ -57,6 +65,8 @@
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="actionOverflowButtonStyle">@style/OverflowButtonStyleDarkMain</item>
         <item name="toolbarNavigationButtonStyle">@style/ToolbarNavButtonStyle</item>
+        <item name="android:popupMenuStyle">@style/popupMenuStyle</item>
+        <item name="context_menu_background_color">@android:color/background_dark</item>
     </style>
 
     <style name="ToolbarNavButtonStyle" parent="Widget.AppCompat.Toolbar.Button.Navigation">

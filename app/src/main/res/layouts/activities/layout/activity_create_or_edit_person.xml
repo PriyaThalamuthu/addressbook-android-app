@@ -300,8 +300,8 @@
                 style="@style/Widget.MaterialComponents.Button.Icon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginRight="10dp"
                 android:height="60dp"
                 app:icon="@drawable/save_24"
@@ -320,6 +320,7 @@
         android:backgroundTint="?attr/fab_color"
         android:contentDescription="@string/add_new_contact"
         app:backgroundTint="?attr/fab_color"
+        app:layout_behavior=".utils.FloatingActionButtonBehavior"
         app:srcCompat="@drawable/attach_file_24" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -332,6 +333,7 @@
         android:backgroundTint="?attr/fab_color"
         android:contentDescription="@string/add_new_contact"
         app:backgroundTint="?attr/fab_color"
+        app:layout_behavior=".utils.FloatingActionButtonBehavior"
         app:srcCompat="@drawable/alternate_email_24" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -344,5 +346,6 @@
         android:backgroundTint="?attr/fab_color"
         android:contentDescription="@string/add_new_contact"
         app:backgroundTint="?attr/fab_color"
+        app:layout_behavior=".utils.FloatingActionButtonBehavior"
         app:srcCompat="@android:drawable/ic_input_add" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
