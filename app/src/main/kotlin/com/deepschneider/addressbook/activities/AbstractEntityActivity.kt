@@ -81,7 +81,7 @@ abstract class AbstractEntityActivity : AppCompatActivity() {
         snackBar.show()
     }
 
-    protected fun makeFileSnackBar(message: String, uri: Uri, mimeType: String?) {
+    fun makeFileSnackBar(message: String, uri: Uri, mimeType: String?) {
         val snackBar = Snackbar.make(getParentCoordinatorLayoutForSnackBar(), message, Snackbar.LENGTH_LONG)
         snackBar.setAction(this.getString(R.string.document_open_action)) {
             val newIntent = Intent(Intent.ACTION_VIEW)

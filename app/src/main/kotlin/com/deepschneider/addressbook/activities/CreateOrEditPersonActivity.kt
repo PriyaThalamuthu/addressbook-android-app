@@ -4,11 +4,8 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.app.DownloadManager
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -19,18 +16,15 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.Window
-import android.webkit.MimeTypeMap
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.FileProvider
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.deepschneider.addressbook.BuildConfig
 import com.deepschneider.addressbook.R
 import com.deepschneider.addressbook.adapters.ContactsListAdapter
 import com.deepschneider.addressbook.adapters.DocumentsListAdapter
@@ -45,6 +39,7 @@ import com.deepschneider.addressbook.network.ProgressCallback
 import com.deepschneider.addressbook.network.ProgressRequestBody
 import com.deepschneider.addressbook.network.SaveOrCreateEntityRequest
 import com.deepschneider.addressbook.network.SimpleGetRequest
+import com.deepschneider.addressbook.receivers.DownloadBroadcastReceiver
 import com.deepschneider.addressbook.utils.Constants
 import com.deepschneider.addressbook.utils.Urls
 import com.deepschneider.addressbook.utils.Utils
@@ -64,7 +59,6 @@ import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Query
-import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -78,76 +72,6 @@ internal interface DocumentUploadService {
 }
 
 class CreateOrEditPersonActivity : AbstractEntityActivity() {
-    private var downloadCompleteReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            val downloadManager = context.getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-            if (DownloadManager.ACTION_DOWNLOAD_COMPLETE == intent.action) {
-                val referenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1L)
-                val dmQuery = DownloadManager.Query()
-                dmQuery.setFilterById(referenceId)
-                try {
-                    downloadManager.query(dmQuery).use { cursor ->
-                        if (cursor != null && cursor.count > 0) {
-                            val columnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)
-                            val columnTitle = cursor.getColumnIndex(DownloadManager.COLUMN_TITLE)
-                            if (cursor.moveToFirst() && cursor.getInt(columnIndex) == DownloadManager.STATUS_SUCCESSFUL) {
-                                val columnUri = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)
-                                val map = MimeTypeMap.getSingleton()
-                                val mimeType = map.getMimeTypeFromExtension(
-                                    MimeTypeMap.getFileExtensionFromUrl(cursor.getString(columnTitle))
-                                )
-                                Uri.parse(cursor.getString(columnUri)).path?.let { path ->
-                                    makeFileSnackBar(
-                                        cursor.getString(columnTitle)
-                                                + this@CreateOrEditPersonActivity.getString(R.string.downloading_finished_message),
-                                        FileProvider.getUriForFile(
-                                            this@CreateOrEditPersonActivity,
-                                            BuildConfig.APPLICATION_ID + ".provider",
-                                            File(path)
-                                        ),
-                                        mimeType
-                                    )
-                                }
-                            } else {
-                                makeSnackBar(cursor.getString(columnTitle)
-                                        + this@CreateOrEditPersonActivity.getString(R.string.downloading_failed_message))
-                            }
-                        }
-                    }
-                } catch (exception: Exception) {
-                    makeSnackBar(this@CreateOrEditPersonActivity.getString(R.string.downloading_failed_message))
-                }
-            }
-
-            if (DownloadManager.ACTION_NOTIFICATION_CLICKED == intent.action) {
-                val referenceId = intent.getLongArrayExtra(DownloadManager.EXTRA_NOTIFICATION_CLICK_DOWNLOAD_IDS)
-                if (referenceId != null) {
-                    if (referenceId.isNotEmpty()) {
-                        val dmQuery = DownloadManager.Query()
-                        dmQuery.setFilterById(*referenceId)
-                        try {
-                            downloadManager.query(dmQuery).use { cursor ->
-                                if (cursor != null && cursor.count > 0) {
-                                    val columnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)
-                                    val columnTitle = cursor.getColumnIndex(DownloadManager.COLUMN_TITLE)
-                                    if (cursor.moveToFirst() && cursor.getInt(columnIndex) == DownloadManager.STATUS_RUNNING) {
-                                        makeSnackBar(cursor.getString(columnTitle)
-                                                + this@CreateOrEditPersonActivity.getString(R.string.downloading_in_progress_message))
-                                    } else {
-                                        makeSnackBar(cursor.getString(columnTitle)
-                                                + this@CreateOrEditPersonActivity.getString(R.string.downloading_failed_message))
-                                    }
-                                }
-                            }
-                        } catch (exception: Exception) {
-                            makeSnackBar(this@CreateOrEditPersonActivity.getString(R.string.downloading_failed_message))
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     private lateinit var binding: ActivityCreateOrEditPersonBinding
     private var personDto: PersonDto? = null
     private lateinit var orgId: String
@@ -156,7 +80,9 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
     private lateinit var startFileChooserForResult: ActivityResultLauncher<Intent>
     private lateinit var currentContactList: MutableList<ContactDto>
     private lateinit var currentDocumentList: MutableList<DocumentDto>
+    private lateinit var downloadCompleteReceiver: DownloadBroadcastReceiver
     private var isFABOpen = false
+
     inner class TextFieldValidation(private val view: View) : TextWatcher {
         override fun afterTextChanged(s: Editable?) {}
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -229,7 +155,7 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
         binding.contactsListView.layoutManager = LinearLayoutManager(this)
         binding.contactsListView.itemAnimator = DefaultItemAnimator()
         binding.documentsListView.setHasFixedSize(true)
-        binding.documentsListView.layoutManager = object:LinearLayoutManager(this){
+        binding.documentsListView.layoutManager = object : LinearLayoutManager(this) {
             override fun supportsPredictiveItemAnimations(): Boolean {
                 return true
             }
@@ -378,8 +304,7 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
                         })
                     val body = MultipartBody.Part.createFormData("file", fileName, requestFile)
                     val service = builder.build().create(DocumentUploadService::class.java)
-                    if(fileSize > 5_242_880)
-                        progressDialog.show()
+                    if (fileSize > 5_242_880) progressDialog.show()
                     progressDialog.setCancelable(false)
                     val call = service.uploadDocument(personDto?.id, body)
                     call?.enqueue(object : Callback<ResponseBody?> {
@@ -794,6 +719,7 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
         val intentFilter = IntentFilter()
         intentFilter.addAction(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
         intentFilter.addAction(DownloadManager.ACTION_NOTIFICATION_CLICKED)
+        downloadCompleteReceiver = DownloadBroadcastReceiver(this)
         registerReceiver(downloadCompleteReceiver, intentFilter)
         personDto?.id?.let { sendLockRequest(true, Constants.PERSONS_CACHE_NAME, it) }
     }

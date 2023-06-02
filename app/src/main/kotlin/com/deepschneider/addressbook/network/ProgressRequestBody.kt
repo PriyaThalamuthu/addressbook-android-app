@@ -5,10 +5,6 @@ import okhttp3.RequestBody
 import okio.BufferedSink
 import java.io.InputStream
 
-interface ProgressCallback {
-    fun onProgress(progress: Long)
-}
-
 class ProgressRequestBody(
     private val mediaType: MediaType,
     private val file: InputStream,
