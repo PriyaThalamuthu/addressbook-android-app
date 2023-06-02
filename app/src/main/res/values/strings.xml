@@ -118,6 +118,7 @@
     <string name="downloading_in_progress_message">\nDOWNLOADING IN PROGRESS</string>
     <string name="downloading_in_progress_notification">Downloading file</string>
     <string name="downloading_finished_message">\nFILE DOWNLOADED</string>
+    <string name="download_action">DOWNLOAD</string>
     <string name="delete_document_dialog_header">DELETE THIS DOCUMENT?</string>
     <string name="deleted_document_notification">DELETED</string>
     <string name="document_open_action">OPEN</string>

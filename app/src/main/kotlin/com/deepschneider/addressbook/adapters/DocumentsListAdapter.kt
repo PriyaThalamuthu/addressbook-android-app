@@ -1,5 +1,6 @@
 package com.deepschneider.addressbook.adapters
 
+import android.annotation.SuppressLint
 import android.app.DownloadManager
 import android.content.Context
 import android.net.Uri
@@ -42,27 +43,35 @@ class DocumentsListAdapter(
                         R.id.menu_delete_document -> {
                             activity.deleteDocument(currentItem)
                         }
+
+                        R.id.menu_download_document -> {
+                            downloadDocument()
+                        }
                     }
                     false
                 }
 
             }
             binding.downloadButton.setOnClickListener {
-                currentItem?.url?.let { url ->
-                    val dm = activity.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager?
-                    val request = DownloadManager.Request(Uri.parse(url))
-                    request.setTitle(currentItem?.name ?: "")
-                    request.setDescription(activity.getString(R.string.downloading_in_progress_notification))
-                    val map = MimeTypeMap.getSingleton()
-                    val ext = MimeTypeMap.getFileExtensionFromUrl(currentItem?.name)
-                    request.setMimeType(map.getMimeTypeFromExtension(ext))
-                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                    request.setDestinationInExternalPublicDir(
-                        Environment.DIRECTORY_DOWNLOADS, currentItem?.name ?: ""
-                    )
-                    dm?.enqueue(request)
-                    activity.makeSnackBar(currentItem?.name + activity.getString(R.string.downloading_in_progress_message))
-                }
+                downloadDocument()
+            }
+        }
+
+        private fun downloadDocument() {
+            currentItem?.url?.let { url ->
+                val dm = activity.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager?
+                val request = DownloadManager.Request(Uri.parse(url))
+                request.setTitle(currentItem?.name ?: "")
+                request.setDescription(activity.getString(R.string.downloading_in_progress_notification))
+                val map = MimeTypeMap.getSingleton()
+                val ext = MimeTypeMap.getFileExtensionFromUrl(currentItem?.name)
+                request.setMimeType(map.getMimeTypeFromExtension(ext))
+                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                request.setDestinationInExternalPublicDir(
+                    Environment.DIRECTORY_DOWNLOADS, currentItem?.name ?: ""
+                )
+                dm?.enqueue(request)
+                activity.makeSnackBar(currentItem?.name + activity.getString(R.string.downloading_in_progress_message))
             }
         }
     }
@@ -77,6 +86,7 @@ class DocumentsListAdapter(
         )
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: DocumentViewHolder, position: Int) {
         holder.currentItem = documents[position]
         holder.documentName.text = documents[position].name

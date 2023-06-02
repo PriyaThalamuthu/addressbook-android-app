@@ -34,7 +34,6 @@ import java.util.concurrent.Executors
 abstract class AbstractEntityActivity : AppCompatActivity() {
 
     protected lateinit var requestQueue: RequestQueue
-    private var showLockNotifications = true
     protected var serverUrl: String? = null
     protected val gson = Gson()
 
@@ -42,8 +41,6 @@ abstract class AbstractEntityActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         requestQueue = Volley.newRequestQueue(this)
         serverUrl = NetworkUtils.getServerUrl(this@AbstractEntityActivity)
-        showLockNotifications = PreferenceManager.getDefaultSharedPreferences(this@AbstractEntityActivity)
-            .getBoolean(Constants.SETTINGS_SHOW_LOCK_NOTIFICATIONS, true)
         setupOnBackPressedListener()
     }
 

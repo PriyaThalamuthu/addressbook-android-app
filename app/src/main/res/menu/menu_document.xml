@@ -6,4 +6,8 @@
         android:id="@+id/menu_delete_document"
         android:icon="@drawable/delete_forever_menu_24"
         android:title="@string/contact_deletion_delete" />
+    <item
+        android:id="@+id/menu_download_document"
+        android:icon="@drawable/file_download_24"
+        android:title="@string/download_action" />
 </menu>

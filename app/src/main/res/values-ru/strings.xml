@@ -103,6 +103,7 @@
     <string name="downloading_in_progress_message">\nИДЕТ СКАЧИВАНИЕ ФАЙЛА</string>
     <string name="downloading_in_progress_notification">Идет скачивание файла</string>
     <string name="downloading_finished_message">\nФАЙЛ СКАЧАН</string>
+    <string name="download_action">СКАЧАТЬ</string>
     <string name="delete_document_dialog_header">УДАЛИТЬ ЭТОТ ДОКУМЕНТ?</string>
     <string name="deleted_document_notification">УДАЛЕН</string>
     <string name="document_open_action">ОТКРЫТЬ</string>
