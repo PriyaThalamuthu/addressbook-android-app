@@ -28,3 +28,6 @@
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook-android-app/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher_dark.png" width="70"/>  
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook-android-app/master/screenshots/all_panels_dark.png" width="1000"/>  
 
+
+### Demo
+[![Video](https://img.youtube.com/vi/7J0j0lTKfNg/maxresdefault.jpg)](https://www.youtube.com/watch?v=7J0j0lTKfNg)
