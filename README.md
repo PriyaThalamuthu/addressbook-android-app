@@ -9,8 +9,9 @@
 - **[Instrumentation testing with Espresso](https://github.com/dredwardhyde/addressbook-android-app/blob/master/app/src/androidTest/kotlin/com/deepschneider/addressbook/WorkflowTest.kt)**
 - **[Dark/Light Theme support](https://github.com/dredwardhyde/addressbook-android-app/blob/master/app/src/main/res/values/themes.xml) with [dynamic switching](https://github.com/dredwardhyde/addressbook-android-app/blob/master/app/src/main/kotlin/com/deepschneider/addressbook/activities/LoginActivity.kt#L60)**
 - **[Dynamic Dark/Light icon switching](https://github.com/dredwardhyde/addressbook-android-app/blob/master/app/src/main/kotlin/com/deepschneider/addressbook/activities/LoginActivity.kt#L106)**
-- **[Material components](https://github.com/dredwardhyde/addressbook-android-app#demo)**
-- **[Rich Text Editor support](https://github.com/dredwardhyde/addressbook-android-app/blob/master/app/src/main/res/layouts/activities/layout/activity_create_or_edit_person.xml#L179)**  
+- **File downloading using [DownloadManager](https://github.com/dredwardhyde/addressbook-android-app/blob/master/app/src/main/kotlin/com/deepschneider/addressbook/adapters/DocumentsListAdapter.kt#L62)**  
+- **Receiving download status using [BroadcastReceiver](https://github.com/dredwardhyde/addressbook-android-app/blob/master/app/src/main/kotlin/com/deepschneider/addressbook/receivers/DownloadBroadcastReceiver.kt#L22)**  
+- **[Multipart file uploading](https://github.com/dredwardhyde/addressbook-android-app/blob/master/app/src/main/kotlin/com/deepschneider/addressbook/activities/CreateOrEditPersonActivity.kt#L251) using Retrofit2 with [custom progress tracking](https://github.com/dredwardhyde/addressbook-android-app/blob/master/app/src/main/kotlin/com/deepschneider/addressbook/network/ProgressRequestBody.kt) and custom [ProgressDialog](https://github.com/dredwardhyde/addressbook-android-app/blob/master/app/src/main/res/layouts/dialogs/layout/uploading_progress_dialog.xml)**
 - **[User certificates support](https://github.com/dredwardhyde/addressbook-android-app/blob/master/app/src/main/res/xml/network_security_config.xml#L5)**  
 - **[Building](https://github.com/dredwardhyde/addressbook-android-app/blob/master/.github/workflows/android.yml#L31), [signing](https://github.com/dredwardhyde/addressbook-android-app/blob/master/app/build.gradle#L20) and [publishing release](https://github.com/dredwardhyde/addressbook-android-app/blob/master/.github/workflows/android.yml#L44) using Github Actions**  
 - **[Custom requests with JWT authentication](https://github.com/dredwardhyde/addressbook-android-app/blob/master/app/src/main/kotlin/com/deepschneider/addressbook/network/FilteredListRequest.kt) using [Android Volley](https://github.com/dredwardhyde/addressbook-android-app/blob/master/app/src/main/kotlin/com/deepschneider/addressbook/activities/AbstractListActivity.kt#L100)**  
@@ -26,10 +27,4 @@
 ### Dark Theme
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook-android-app/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher_dark.png" width="70"/>  
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook-android-app/master/screenshots/all_panels_dark.png" width="1000"/>  
-
-### Demo
-
-https://user-images.githubusercontent.com/8986329/236672505-e448ab4b-4c9f-4f2b-951e-eea0f523ac69.mp4
-
-https://user-images.githubusercontent.com/8986329/236672510-30881cfe-eedc-4505-a732-48f135dc636b.mp4
 
