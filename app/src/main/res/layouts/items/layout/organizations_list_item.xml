@@ -25,7 +25,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight=".60"
+                android:layout_weight=".65"
                 android:orientation="vertical">
 
                 <TextView
@@ -64,7 +64,7 @@
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight=".40"
+                android:layout_weight=".35"
                 android:gravity="end"
                 android:orientation="vertical">
 
@@ -78,6 +78,7 @@
                     android:textColor="?attr/main_list_item_secondary_color"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:minLines="2"
                     android:maxLines="2"
                     tools:ignore="RtlSymmetry" />
 
