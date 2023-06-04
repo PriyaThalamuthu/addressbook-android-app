@@ -71,7 +71,7 @@ class LoginActivity : AppCompatActivity() {
         binding.loginButton.setOnClickListener {
             createOrRotateLoginToken(true, ::saveBiometrics)
         }
-        Constants.PAGE_SIZE = (((resources.displayMetrics.run { heightPixels / density } - 50) / 90)).toInt()
+        Constants.PAGE_SIZE = (((resources.displayMetrics.run { heightPixels / density } - 50) / 90)).toInt() - 1
         if (resources.configuration.isNightModeActive) {
             enableDarkIcon()
             Constants.ACTIVE_LOGIN_COMPONENT = ".activities.LoginActivity"
