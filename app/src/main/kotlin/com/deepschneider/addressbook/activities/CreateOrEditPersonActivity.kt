@@ -511,19 +511,15 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
         var create = false
         personDto?.let {
             targetPersonDto = it
-            targetPersonDto?.firstName = binding.firstName.text.toString()
-            targetPersonDto?.lastName = binding.lastName.text.toString()
-            targetPersonDto?.resume = binding.resume.text.toString()
-            targetPersonDto?.salary = binding.salary.text.toString() + " " + binding.salaryCurrency.text.toString()
         } ?: run {
             create = true
             targetPersonDto = PersonDto()
-            targetPersonDto?.firstName = binding.firstName.text.toString()
-            targetPersonDto?.lastName = binding.lastName.text.toString()
-            targetPersonDto?.resume = binding.resume.text.toString()
-            targetPersonDto?.salary = binding.salary.text.toString() + " " + binding.salaryCurrency.text.toString()
             targetPersonDto?.orgId = orgId
         }
+        targetPersonDto?.firstName = binding.firstName.text.toString()
+        targetPersonDto?.lastName = binding.lastName.text.toString()
+        targetPersonDto?.resume = binding.resume.text.toString()
+        targetPersonDto?.salary = binding.salary.text.toString() + " " + binding.salaryCurrency.text.toString()
         targetPersonDto?.let {
             val handler = Handler(Looper.getMainLooper())
             val executor: ExecutorService = Executors.newSingleThreadExecutor()

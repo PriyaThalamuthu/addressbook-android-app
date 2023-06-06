@@ -192,19 +192,15 @@ class CreateOrEditOrganizationActivity : AbstractEntityActivity() {
         var create = false
         organizationDto?.let {
             targetOrganizationDto = it
-            targetOrganizationDto?.name = binding.name.text.toString()
-            targetOrganizationDto?.street = binding.address.text.toString()
-            targetOrganizationDto?.zip = binding.zip.text.toString()
-            targetOrganizationDto?.type = convertTypeToIndex(binding.type.text.toString())
         } ?: run {
             create = true
             targetOrganizationDto = OrganizationDto()
             targetOrganizationDto?.id = UUID.randomUUID().toString()
-            targetOrganizationDto?.name = binding.name.text.toString()
-            targetOrganizationDto?.street = binding.address.text.toString()
-            targetOrganizationDto?.zip = binding.zip.text.toString()
-            targetOrganizationDto?.type = convertTypeToIndex(binding.type.text.toString())
         }
+        targetOrganizationDto?.name = binding.name.text.toString()
+        targetOrganizationDto?.street = binding.address.text.toString()
+        targetOrganizationDto?.zip = binding.zip.text.toString()
+        targetOrganizationDto?.type = convertTypeToIndex(binding.type.text.toString())
         targetOrganizationDto?.let {
             val handler = Handler(Looper.getMainLooper())
             val executor: ExecutorService = Executors.newSingleThreadExecutor()
