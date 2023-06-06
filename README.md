@@ -6,7 +6,7 @@
 ### Features
 
 - **[Biometrics support](https://github.com/dredwardhyde/addressbook-android-app/blob/master/app/src/main/kotlin/com/deepschneider/addressbook/activities/LoginActivity.kt#L328)**
-- **[Instrumentation testing with Espresso](https://github.com/dredwardhyde/addressbook-android-app/blob/master/app/src/androidTest/kotlin/com/deepschneider/addressbook/WorkflowTest.kt)**
+- **[Instrumentation testing using Espresso](https://github.com/dredwardhyde/addressbook-android-app/blob/master/app/src/androidTest/kotlin/com/deepschneider/addressbook/WorkflowTest.kt)**
 - **[Dark/Light Theme support](https://github.com/dredwardhyde/addressbook-android-app/blob/master/app/src/main/res/values/themes.xml) with [dynamic switching](https://github.com/dredwardhyde/addressbook-android-app/blob/master/app/src/main/kotlin/com/deepschneider/addressbook/activities/LoginActivity.kt#L60)**
 - **[Dynamic Dark/Light icon switching](https://github.com/dredwardhyde/addressbook-android-app/blob/master/app/src/main/kotlin/com/deepschneider/addressbook/activities/LoginActivity.kt#L106)**
 - **[Material components](https://github.com/dredwardhyde/addressbook-android-app#demo)**
