@@ -31,9 +31,7 @@ import com.deepschneider.addressbook.adapters.DocumentsListAdapter
 import com.deepschneider.addressbook.databinding.ActivityCreateOrEditPersonBinding
 import com.deepschneider.addressbook.dto.ContactDto
 import com.deepschneider.addressbook.dto.DocumentDto
-import com.deepschneider.addressbook.dto.PageDataDto
 import com.deepschneider.addressbook.dto.PersonDto
-import com.deepschneider.addressbook.dto.TableDataDto
 import com.deepschneider.addressbook.network.EntityGetRequest
 import com.deepschneider.addressbook.network.ProgressCallback
 import com.deepschneider.addressbook.network.ProgressRequestBody
@@ -401,16 +399,16 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
             val handler = Handler(Looper.getMainLooper())
             executor.execute {
                 requestQueue.add(
-                    EntityGetRequest<TableDataDto<ContactDto>>(
+                    EntityGetRequest<List<ContactDto>>(
                         "$serverUrl" + Urls.GET_CONTACTS + "?personId=${personDto?.id}",
                         { response ->
-                            if (response.data?.data?.isEmpty() == true) {
+                            if (response?.isEmpty() == true) {
                                 handler.post {
                                     binding.emptyContactsList.visibility = View.VISIBLE
                                     currentContactList = arrayListOf()
                                 }
                             } else {
-                                response.data?.data?.let {
+                                response?.let {
                                     handler.post {
                                         currentContactList = it.toMutableList()
                                         updateContactAdapter()
@@ -428,7 +426,7 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
                             }
                         },
                         this@CreateOrEditPersonActivity,
-                        object : TypeToken<PageDataDto<TableDataDto<ContactDto>>>() {}.type
+                        object : TypeToken<List<ContactDto>>() {}.type
                     ).also { it.tag = getRequestTag() })
             }
         } ?: run {
@@ -443,17 +441,17 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
             val handler = Handler(Looper.getMainLooper())
             executor.execute {
                 requestQueue.add(
-                    EntityGetRequest<TableDataDto<DocumentDto>>(
+                    EntityGetRequest<List<DocumentDto>>(
                         "$serverUrl" + Urls.GET_DOCUMENTS + "?personId=${personDto?.id}&origin=${serverUrl}",
                         { response ->
-                            if (response.data?.data?.isEmpty() == true) {
+                            if (response?.isEmpty() == true) {
                                 handler.post {
                                     binding.documentsListView.visibility = View.GONE
                                     binding.emptyDocumentsList.visibility = View.VISIBLE
                                     currentDocumentList = arrayListOf()
                                 }
                             } else {
-                                response.data?.data?.let {
+                                response?.let {
                                     handler.post {
                                         currentDocumentList = it.toMutableList()
                                         updateDocumentAdapter()
@@ -471,7 +469,7 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
                             }
                         },
                         this@CreateOrEditPersonActivity,
-                        object : TypeToken<PageDataDto<TableDataDto<DocumentDto>>>() {}.type
+                        object : TypeToken<List<DocumentDto>>() {}.type
                     ).also { it.tag = getRequestTag() })
             }
         } ?: run {
@@ -536,7 +534,7 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
                         url,
                         it,
                         { response ->
-                            response.data?.let { savedPersonDto ->
+                            response?.let { savedPersonDto ->
                                 savedPersonDto.id?.let { personId ->
                                     sendLockRequest(
                                         true, Constants.PERSONS_CACHE_NAME, personId
@@ -545,7 +543,7 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
                                         "$serverUrl" + Urls.SAVE_OR_CREATE_CONTACTS + "?personId=" + personId,
                                         currentContactList,
                                         { response ->
-                                            response.data?.let {
+                                            response?.let {
                                                 handler.post {
                                                     personDto = savedPersonDto
                                                     handler.post {
@@ -577,7 +575,7 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
                                             }
                                         },
                                         this@CreateOrEditPersonActivity,
-                                        object : TypeToken<PageDataDto<List<ContactDto>>>() {}.type
+                                        object : TypeToken<List<ContactDto>>() {}.type
                                     ).also { it.tag = getRequestTag() })
                                 }
                             }
@@ -588,7 +586,7 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
                             }
                         },
                         this@CreateOrEditPersonActivity,
-                        object : TypeToken<PageDataDto<PersonDto>>() {}.type
+                        object : TypeToken<PersonDto>() {}.type
                     ).also { it.tag = getRequestTag() })
             }
         }

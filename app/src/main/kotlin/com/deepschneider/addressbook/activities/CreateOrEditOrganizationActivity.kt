@@ -10,7 +10,6 @@ import android.view.View
 import com.deepschneider.addressbook.R
 import com.deepschneider.addressbook.databinding.ActivityCreateOrEditOrganizationBinding
 import com.deepschneider.addressbook.dto.OrganizationDto
-import com.deepschneider.addressbook.dto.PageDataDto
 import com.deepschneider.addressbook.network.SaveOrCreateEntityRequest
 import com.deepschneider.addressbook.utils.Constants
 import com.deepschneider.addressbook.utils.Urls
@@ -215,7 +214,7 @@ class CreateOrEditOrganizationActivity : AbstractEntityActivity() {
                     url,
                     it,
                     { response ->
-                        response.data?.let {
+                        response?.let {
                             handler.post {
                                 organizationDto = it
                                 handler.post {
@@ -249,7 +248,7 @@ class CreateOrEditOrganizationActivity : AbstractEntityActivity() {
                         }
                     },
                     this@CreateOrEditOrganizationActivity,
-                    object : TypeToken<PageDataDto<OrganizationDto>>() {}.type
+                    object : TypeToken<OrganizationDto>() {}.type
                 ).also { it.tag = getRequestTag() })
             }
         }

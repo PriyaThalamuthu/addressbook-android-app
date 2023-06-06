@@ -121,7 +121,7 @@ class PersonsActivity : AbstractListActivity<PersonDto>() {
                 EntityGetRequest<OrganizationDto>(
                     url,
                     { response ->
-                        response.data?.let {
+                        response?.let {
                             organizationDto = it
                         }
                         handler.post {
@@ -134,7 +134,7 @@ class PersonsActivity : AbstractListActivity<PersonDto>() {
                         }
                     },
                     this@PersonsActivity,
-                    object : TypeToken<PageDataDto<OrganizationDto>>() {}.type
+                    object : TypeToken<OrganizationDto>() {}.type
                 ).also { it.tag = getRequestTag() })
         }
     }

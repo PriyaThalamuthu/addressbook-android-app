@@ -19,7 +19,6 @@ import com.android.volley.VolleyError
 import com.android.volley.toolbox.Volley
 import com.deepschneider.addressbook.R
 import com.deepschneider.addressbook.dto.AlertDto
-import com.deepschneider.addressbook.dto.PageDataDto
 import com.deepschneider.addressbook.network.EntityGetRequest
 import com.deepschneider.addressbook.utils.NetworkUtils
 import com.deepschneider.addressbook.utils.Urls
@@ -66,7 +65,7 @@ abstract class AbstractEntityActivity : AppCompatActivity() {
                         }
                     },
                     this@AbstractEntityActivity,
-                    object : TypeToken<PageDataDto<AlertDto>>() {}.type
+                    object : TypeToken<AlertDto>() {}.type
                 ).also { it.tag = getRequestTag() })
         }
     }

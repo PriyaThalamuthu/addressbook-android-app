@@ -6,7 +6,6 @@ import com.android.volley.ParseError
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.HttpHeaderParser
-import com.deepschneider.addressbook.dto.PageDataDto
 import com.deepschneider.addressbook.utils.NetworkUtils
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
@@ -15,11 +14,11 @@ import java.lang.reflect.Type
 
 class EntityGetRequest<T>(
     url: String,
-    private val responseListener: Response.Listener<PageDataDto<T>>,
+    private val responseListener: Response.Listener<T>,
     errorListener: Response.ErrorListener,
     private var context: Context,
     private var type: Type
-) : Request<PageDataDto<T>>(Method.GET, url, errorListener) {
+) : Request<T>(Method.GET, url, errorListener) {
 
     private val gson = Gson()
 
@@ -27,7 +26,7 @@ class EntityGetRequest<T>(
         return NetworkUtils.addAuthHeader(super.getHeaders(), context)
     }
 
-    override fun parseNetworkResponse(response: NetworkResponse?): Response<PageDataDto<T>> {
+    override fun parseNetworkResponse(response: NetworkResponse?): Response<T> {
         return try {
             val json = String(response?.data ?: ByteArray(0), Charsets.UTF_8)
             Response.success(
@@ -47,7 +46,7 @@ class EntityGetRequest<T>(
         return "application/json; charset=utf-8"
     }
 
-    override fun deliverResponse(response: PageDataDto<T>?) {
+    override fun deliverResponse(response: T?) {
         responseListener.onResponse(response)
     }
 }
