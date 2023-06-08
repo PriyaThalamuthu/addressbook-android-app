@@ -2,6 +2,7 @@ package com.deepschneider.addressbook.utils
 
 import android.content.Context
 import androidx.preference.PreferenceManager
+import com.deepschneider.addressbook.BuildConfig
 
 object NetworkUtils {
     fun addAuthHeader(
@@ -21,8 +22,6 @@ object NetworkUtils {
         val serverHost = PreferenceManager.getDefaultSharedPreferences(context)
             .getString(Constants.SETTINGS_SERVER_URL, Constants.NO_VALUE)
         if (serverHost == Constants.NO_VALUE || serverHost.isNullOrBlank()) return Constants.NO_VALUE
-        val shouldUseHttp = PreferenceManager.getDefaultSharedPreferences(context)
-            .getBoolean(Constants.SETTINGS_SHOULD_USE_HTTP, false)
-        return (if (shouldUseHttp) "http://" else "https://") + serverHost
+        return (if (BuildConfig.DEBUG) "http://" else "https://") + serverHost
     }
 }

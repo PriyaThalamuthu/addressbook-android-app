@@ -5,10 +5,4 @@
         app:title="@string/server_url"
         app:useSimpleSummaryProvider="true" />
 
-    <CheckBoxPreference
-        app:key="should_use_http"
-        app:defaultValue="false"
-        app:title="@string/should_use_http"
-        />
-    
 </PreferenceScreen>

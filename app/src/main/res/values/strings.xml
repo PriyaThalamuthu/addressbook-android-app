@@ -66,7 +66,6 @@
     <string name="empty_documents_list_message">NO DOCUMENTS</string>
     <string name="general_header">GENERAL</string>
     <string name="server_url">SERVER URL</string>
-    <string name="should_use_http">SHOULD USE HTTP?</string>
     <string name="drawer_opened">OPENED</string>
     <string name="drawer_closed">CLOSED</string>
     <string name="auth_failure_message">WRONG LOGIN OR PASSWORD</string>

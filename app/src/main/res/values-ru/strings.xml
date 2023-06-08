@@ -50,7 +50,6 @@
     <string name="empty_documents_list_message">НЕТ ДОКУМЕНТОВ</string>
     <string name="general_header">ОБЩЕЕ</string>
     <string name="server_url">АДРЕС СЕРВЕРА</string>
-    <string name="should_use_http">ИСПОЛЬЗОВАНИЕ HTTP</string>
     <string name="drawer_opened">ОТКРЫТО</string>
     <string name="drawer_closed">ЗАКРЫТО</string>
     <string name="auth_failure_message">НЕПРАВИЛЬНЫЙ ЛОГИН ИЛИ ПАРОЛЬ</string>

@@ -34,8 +34,6 @@ class LoginActivityTest {
     fun setUp() {
         loginActivity = loginActivityTestRule.activity
         PreferenceManager.getDefaultSharedPreferences(loginActivity).edit()
-            .putBoolean(Constants.SETTINGS_SHOULD_USE_HTTP, true).commit()
-        PreferenceManager.getDefaultSharedPreferences(loginActivity).edit()
             .putString(Constants.SETTINGS_SERVER_URL, "192.168.1.210:10000").commit()
         PreferenceManager.getDefaultSharedPreferences(loginActivity).edit()
             .remove(Constants.TOKEN_KEY).commit()
