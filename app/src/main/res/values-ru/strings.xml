@@ -110,4 +110,5 @@
     <string name="file_uploaded">\nФАЙЛ ЗАГРУЖЕН</string>
     <string name="file_uploading_failed">ЗАГРУЗКА ФАЙЛА ЗАВЕРШИЛАСЬ С ОШИБКОЙ</string>
     <string name="file_cannot_be_uploaded">ФАЙЛ НЕ МОЖЕТ БЫТЬ ЗАГРУЖЕН</string>
+    <string name="record_already_locked_message">ЗАПИСЬ УЖЕ БЫЛА ЗАБЛОКИРОВАНА</string>
 </resources>

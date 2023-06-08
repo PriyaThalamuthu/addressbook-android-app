@@ -66,7 +66,7 @@ abstract class AbstractEntityActivity : AppCompatActivity() {
                         } else if (result.type == "warning") {
                             entityLocked = false
                             result.message?.let {
-                                makeSnackBar(it)
+                                makeSnackBar(getString(R.string.record_already_locked_message))
                             }
                         }
                         updateSaveButtonState()
