@@ -43,7 +43,7 @@
     <string name="search_person_first_name">FIRST NAME</string>
     <string name="search_person_last_name">LAST NAME</string>
     <string name="search_person_resume">RESUME</string>
-    <string name="search_person_salary">ANNUAL SALARY</string>
+    <string name="search_person_salary">SALARY</string>
     <string name="search_person_salary_currency">CURRENCY</string>
     <string name="search_person_obj_id" translatable="false">id</string>
     <string name="search_person_obj_first_name" translatable="false">firstName</string>
@@ -67,7 +67,6 @@
     <string name="general_header">GENERAL</string>
     <string name="server_url">SERVER URL</string>
     <string name="should_use_http">SHOULD USE HTTP?</string>
-    <string name="show_lock_notifications">SHOW LOCK NOTIFICATIONS?</string>
     <string name="drawer_opened">OPENED</string>
     <string name="drawer_closed">CLOSED</string>
     <string name="auth_failure_message">WRONG LOGIN OR PASSWORD</string>
@@ -79,12 +78,12 @@
     <string name="organization_type_public">Public</string>
     <string name="sort_order_asc">ASCENDING</string>
     <string name="sort_order_desc">DESCENDING</string>
-    <string name="validation_error_required_field">Required field!</string>
-    <string name="validation_error_value_too_long">Value is too long!</string>
-    <string name="changes_saved_message">Changes saved!</string>
-    <string name="person_created_message">Person created!</string>
-    <string name="organization_created_message">Organization created!</string>
-    <string name="delete_contact_confirmation">Delete this contact?</string>
+    <string name="validation_error_required_field">REQUIRED FIELD</string>
+    <string name="validation_error_value_too_long">VALUE IS TOO LONG</string>
+    <string name="changes_saved_message">CHANGES SAVED</string>
+    <string name="person_created_message">PERSON CREATED</string>
+    <string name="organization_created_message">ORGANIZATION CREATED</string>
+    <string name="delete_contact_confirmation">DELETE THIS CONTACT?</string>
     <string name="contact_type_mobile_phone">Mobile phone</string>
     <string name="contact_type_home_phone">Home phone</string>
     <string name="contact_type_address">Address</string>
@@ -113,7 +112,7 @@
     <string name="biometric_login_title_question">Use biometric login for this app?</string>
     <string name="biometric_authentification_failed_message">Authentication failed</string>
     <string name="biometric_authentification_error_message">Authentication error:</string>
-    <string name="server_url_empty_error">SET SERVER URL IN SETTINGS!</string>
+    <string name="server_url_empty_error">SET SERVER URL IN SETTINGS</string>
     <string name="downloading_failed_message">\nDOWNLOADING FAILED\nPLEASE TRY AGAIN</string>
     <string name="downloading_in_progress_message">\nDOWNLOADING IN PROGRESS</string>
     <string name="downloading_in_progress_notification">Downloading file</string>

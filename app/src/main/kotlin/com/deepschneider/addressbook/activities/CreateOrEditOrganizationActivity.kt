@@ -183,8 +183,8 @@ class CreateOrEditOrganizationActivity : AbstractEntityActivity() {
         return this.resources.getStringArray(R.array.org_types)[type.toInt() + 1]
     }
 
-    private fun updateSaveButtonState() {
-        binding.saveCreateButton.isEnabled = fieldValidation.all { it }
+    override fun updateSaveButtonState() {
+        binding.saveCreateButton.isEnabled = fieldValidation.all { it } && entityLocked
     }
 
     private fun saveOrCreateOrganization() {

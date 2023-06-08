@@ -38,8 +38,6 @@ class WorkflowTest {
         PreferenceManager.getDefaultSharedPreferences(loginActivity).edit()
             .putString(Constants.SETTINGS_SERVER_URL, "192.168.1.210:10000").commit()
         PreferenceManager.getDefaultSharedPreferences(loginActivity).edit()
-            .putBoolean(Constants.SETTINGS_SHOW_LOCK_NOTIFICATIONS, false).commit()
-        PreferenceManager.getDefaultSharedPreferences(loginActivity).edit()
             .remove(Constants.TOKEN_KEY).commit()
     }
 

@@ -33,6 +33,8 @@ abstract class AbstractEntityActivity : AppCompatActivity() {
     protected lateinit var requestQueue: RequestQueue
     protected var serverUrl: String? = null
     protected val gson = Gson()
+    @Volatile
+    protected var entityLocked: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +60,17 @@ abstract class AbstractEntityActivity : AppCompatActivity() {
             requestQueue.add(
                 EntityGetRequest<AlertDto>(
                     url,
-                    {},
+                    { result ->
+                        if (result.type == "success") {
+                            entityLocked = true
+                        } else if (result.type == "warning") {
+                            entityLocked = false
+                            result.message?.let {
+                                makeSnackBar(it)
+                            }
+                        }
+                        updateSaveButtonState()
+                    },
                     { error ->
                         handler.post {
                             makeErrorSnackBar(error)
@@ -116,4 +128,6 @@ abstract class AbstractEntityActivity : AppCompatActivity() {
     abstract fun getParentCoordinatorLayoutForSnackBar(): View
 
     abstract fun getRequestTag(): String
+
+    abstract fun updateSaveButtonState()
 }

@@ -31,7 +31,7 @@
     <string name="search_person_first_name">ИМЯ</string>
     <string name="search_person_last_name">ФАМИЛИЯ</string>
     <string name="search_person_resume">РЕЗЮМЕ</string>
-    <string name="search_person_salary">ГОДОВАЯ ЗАРПЛАТА</string>
+    <string name="search_person_salary">ЗАРПЛАТА</string>
     <string name="search_person_salary_currency">ВАЛЮТА</string>
     <string name="no_value_placeholder">Нет значения</string>
     <string name="organizations">ОРГАНИЗАЦИИ</string>
@@ -51,7 +51,6 @@
     <string name="general_header">ОБЩЕЕ</string>
     <string name="server_url">АДРЕС СЕРВЕРА</string>
     <string name="should_use_http">ИСПОЛЬЗОВАНИЕ HTTP</string>
-    <string name="show_lock_notifications">УВЕДОМЛЕНИЯ О БЛОКИРОВКАХ</string>
     <string name="drawer_opened">ОТКРЫТО</string>
     <string name="drawer_closed">ЗАКРЫТО</string>
     <string name="auth_failure_message">НЕПРАВИЛЬНЫЙ ЛОГИН ИЛИ ПАРОЛЬ</string>
@@ -63,12 +62,12 @@
     <string name="organization_type_public">Публичная</string>
     <string name="sort_order_asc">ПО ВОЗРАСТАНИЮ</string>
     <string name="sort_order_desc">ПО УБЫВАНИЮ</string>
-    <string name="validation_error_required_field">Обязательное поле!</string>
-    <string name="validation_error_value_too_long">Слишком длинное значение!</string>
-    <string name="changes_saved_message">Изменения сохранены!</string>
-    <string name="person_created_message">Персона добавлена!</string>
-    <string name="organization_created_message">Организация добавлена!</string>
-    <string name="delete_contact_confirmation">Удалить этот контакт?</string>
+    <string name="validation_error_required_field">ОБЯЗАТЕЛЬНОЕ ПОЛЕ</string>
+    <string name="validation_error_value_too_long">СЛИШКОМ ДЛИННОЕ ЗНАЧЕНИЕ</string>
+    <string name="changes_saved_message">ИЗМЕНЕНИЯ СОХРАНЕНЫ</string>
+    <string name="person_created_message">ПЕРСОНА ДОБАВЛЕНА</string>
+    <string name="organization_created_message">ОРГАНИЗАЦИЯ ДОБАВЛЕНА</string>
+    <string name="delete_contact_confirmation">УДАЛИТЬ ЭТОТ КОНТАКТ?</string>
     <string name="contact_type_mobile_phone">Мобильный телефон</string>
     <string name="contact_type_home_phone">Домашний телефон</string>
     <string name="contact_type_address">Адрес</string>
@@ -98,7 +97,7 @@
     <string name="biometric_authentification_failed_message">Ошибка аутентификации</string>
     <string name="biometric_authentification_error_message">Ошибка аутентификации:</string>
     <string name="action_share_person">ОТПРАВИТЬ ДАННЫЕ</string>
-    <string name="server_url_empty_error">УКАЖИТЕ АДРЕС СЕРВЕРА В НАСТРОЙКАХ!</string>
+    <string name="server_url_empty_error">УКАЖИТЕ АДРЕС СЕРВЕРА В НАСТРОЙКАХ</string>
     <string name="downloading_failed_message">\nСКАЧИВАНИЕ ЗАВЕРШИЛОСЬ С ОШИБКОЙ\nПОВТОРИТЕ ПОПЫТКУ</string>
     <string name="downloading_in_progress_message">\nИДЕТ СКАЧИВАНИЕ ФАЙЛА</string>
     <string name="downloading_in_progress_notification">Идет скачивание файла</string>
