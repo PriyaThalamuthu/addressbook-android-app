@@ -703,12 +703,20 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
         intentFilter.addAction(DownloadManager.ACTION_NOTIFICATION_CLICKED)
         downloadCompleteReceiver = DownloadBroadcastReceiver(this)
         registerReceiver(downloadCompleteReceiver, intentFilter)
-        personDto?.id?.let { sendLockRequest(true, Constants.PERSONS_CACHE_NAME, it) }
+        personDto?.id?.let {
+            sendLockRequest(true, Constants.PERSONS_CACHE_NAME, it)
+        } ?: run {
+            entityLocked = true
+        }
     }
 
     override fun onStop() {
         super.onStop()
         unregisterReceiver(downloadCompleteReceiver)
-        personDto?.id?.let { sendLockRequest(false, Constants.PERSONS_CACHE_NAME, it) }
+        personDto?.id?.let {
+            sendLockRequest(false, Constants.PERSONS_CACHE_NAME, it)
+        } ?: run {
+            entityLocked = false
+        }
     }
 }

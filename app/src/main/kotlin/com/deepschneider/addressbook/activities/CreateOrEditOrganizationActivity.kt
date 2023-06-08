@@ -258,6 +258,8 @@ class CreateOrEditOrganizationActivity : AbstractEntityActivity() {
         super.onStart()
         organizationDto?.id?.let {
             sendLockRequest(true, Constants.ORGANIZATIONS_CACHE_NAME, it)
+        } ?: run {
+            entityLocked = true
         }
     }
 
@@ -275,6 +277,8 @@ class CreateOrEditOrganizationActivity : AbstractEntityActivity() {
         super.onStop()
         organizationDto?.id?.let {
             sendLockRequest(false, Constants.ORGANIZATIONS_CACHE_NAME, it)
+        } ?: run {
+            entityLocked = false
         }
     }
 }

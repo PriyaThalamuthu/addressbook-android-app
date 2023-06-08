@@ -65,5 +65,6 @@ class LoginActivityTest {
         // Log out
         openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().targetContext)
         onView(withText(R.string.action_logout)).perform(click())
+        onView(withText(R.string.action_logout)).perform(click())
     }
 }
