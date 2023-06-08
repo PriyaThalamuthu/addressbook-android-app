@@ -126,4 +126,5 @@
     <string name="file_uploading_failed">FILE UPLOADING FAILED</string>
     <string name="file_cannot_be_uploaded">FILE CAN NOT BE UPLOADED</string>
     <string name="record_already_locked_message">RECORD WAS ALREADY LOCKED</string>
+    <string name="logout_confirmation">DO YOU WANT TO LOGOUT?</string>
 </resources>

@@ -169,25 +169,33 @@ abstract class AbstractListActivity<in T> : AppCompatActivity() {
 
     @SuppressLint("ApplySharedPref")
     protected fun logout() {
-        requestQueue.add(
-            LogoutRequest(
-                NetworkUtils.getServerUrl(this),
-                {
-                    PreferenceManager.getDefaultSharedPreferences(this)
-                        .edit()
-                        .remove(Constants.TOKEN_KEY)
-                        .commit()
-                    val intent = Intent()
-                    intent.component = ComponentName(this.packageName, this.packageName + Constants.ACTIVE_LOGIN_COMPONENT)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
-                },
-                { error ->
-                    makeErrorSnackBar(error)
-                }, this@AbstractListActivity
-            )
-        )
+        MaterialAlertDialogBuilder(this@AbstractListActivity)
+            .setTitle(this.getString(R.string.logout_confirmation))
+            .setPositiveButton(R.string.action_logout) { _, _ ->
+                requestQueue.add(
+                    LogoutRequest(
+                        NetworkUtils.getServerUrl(this),
+                        {
+                            PreferenceManager.getDefaultSharedPreferences(this)
+                                .edit()
+                                .remove(Constants.TOKEN_KEY)
+                                .commit()
+                            val intent = Intent()
+                            intent.component = ComponentName(
+                                this.packageName,
+                                this.packageName + Constants.ACTIVE_LOGIN_COMPONENT
+                            )
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            startActivity(intent)
+                        },
+                        { error ->
+                            makeErrorSnackBar(error)
+                        }, this@AbstractListActivity
+                    )
+                )
+            }
+            .setNegativeButton(R.string.contact_deletion_cancel, null).show()
     }
 
     protected fun showSortSettingsDialogs() {
