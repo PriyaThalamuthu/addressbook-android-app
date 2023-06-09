@@ -12,10 +12,12 @@ import android.os.Looper
 import android.text.Editable
 import android.text.Html
 import android.text.TextWatcher
+import android.util.DisplayMetrics
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.Window
+import android.view.WindowManager
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
@@ -290,8 +292,16 @@ class CreateOrEditPersonActivity : AbstractEntityActivity() {
                         })
                     val body = MultipartBody.Part.createFormData("file", fileName, requestFile)
                     val service = builder.build().create(DocumentUploadService::class.java)
-                    if (fileSize > 5_242_880) progressDialog.show()
-                    progressDialog.setCancelable(false)
+                    if (fileSize > 5_242_880) {
+                        progressDialog.show()
+                        progressDialog.setCancelable(false)
+                        val displayMetrics = DisplayMetrics()
+                        windowManager.defaultDisplay.getMetrics(displayMetrics)
+                        val layoutParams = WindowManager.LayoutParams()
+                        layoutParams.copyFrom(progressDialog.window?.attributes)
+                        layoutParams.width = (displayMetrics.widthPixels * 0.9f).toInt()
+                        progressDialog.window?.attributes = layoutParams
+                    }
                     val call = service.uploadDocument(personDto?.id, body)
                     call?.enqueue(object : Callback<ResponseBody?> {
                         override fun onResponse(
