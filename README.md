@@ -12,7 +12,7 @@
 - **[Material components](https://github.com/dredwardhyde/addressbook-android-app#demo)**
 - **Downloading files using [DownloadManager](https://github.com/dredwardhyde/addressbook-android-app/blob/master/app/src/main/kotlin/com/deepschneider/addressbook/adapters/DocumentsListAdapter.kt#L62)**  
 - **Receiving download status using [BroadcastReceiver](https://github.com/dredwardhyde/addressbook-android-app/blob/master/app/src/main/kotlin/com/deepschneider/addressbook/receivers/DownloadBroadcastReceiver.kt#L22)**  
-- **[Multipart file uploading](https://github.com/dredwardhyde/addressbook-android-app/blob/master/app/src/main/kotlin/com/deepschneider/addressbook/activities/CreateOrEditPersonActivity.kt#L251) using Retrofit2 with [custom progress tracking](https://github.com/dredwardhyde/addressbook-android-app/blob/master/app/src/main/kotlin/com/deepschneider/addressbook/network/ProgressRequestBody.kt) and custom [ProgressDialog](https://github.com/dredwardhyde/addressbook-android-app/blob/master/app/src/main/res/layouts/dialogs/layout/uploading_progress_dialog.xml)**
+- **[Multipart file uploading](https://github.com/dredwardhyde/addressbook-android-app/blob/master/app/src/main/kotlin/com/deepschneider/addressbook/activities/CreateOrEditPersonActivity.kt#L239) using Retrofit2 with [custom progress tracking](https://github.com/dredwardhyde/addressbook-android-app/blob/master/app/src/main/kotlin/com/deepschneider/addressbook/network/ProgressRequestBody.kt) and custom [ProgressDialog](https://github.com/dredwardhyde/addressbook-android-app/blob/master/app/src/main/res/layouts/dialogs/layout/uploading_progress_dialog.xml)**
 - **[User certificates support](https://github.com/dredwardhyde/addressbook-android-app/blob/master/app/src/main/res/xml/network_security_config.xml#L5)**  
 - **[Building](https://github.com/dredwardhyde/addressbook-android-app/blob/master/.github/workflows/android.yml#L31), [signing](https://github.com/dredwardhyde/addressbook-android-app/blob/master/app/build.gradle#L20) and [publishing release](https://github.com/dredwardhyde/addressbook-android-app/blob/master/.github/workflows/android.yml#L44) using Github Actions**  
 - **[Custom requests with JWT authentication](https://github.com/dredwardhyde/addressbook-android-app/blob/master/app/src/main/kotlin/com/deepschneider/addressbook/network/FilteredListRequest.kt) using [Android Volley](https://github.com/dredwardhyde/addressbook-android-app/blob/master/app/src/main/kotlin/com/deepschneider/addressbook/activities/AbstractListActivity.kt#L100)**  
@@ -31,4 +31,4 @@
 
 
 ### Demo
-[![Video](https://img.youtube.com/vi/7J0j0lTKfNg/maxresdefault.jpg)](https://www.youtube.com/watch?v=7J0j0lTKfNg)
+[![Video](https://img.youtube.com/vi/fyNQY-SJO7M/maxresdefault.jpg)](https://www.youtube.com/watch?v=fyNQY-SJO7M)
